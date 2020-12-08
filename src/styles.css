@@ -2,3 +2,8 @@ html {height:100%}
 body {
   min-height: 100%;
 }
+#content-wrapper {
+  background: rgb(242,245,255);
+  min-height: 100%;
+}
+
