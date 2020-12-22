@@ -1,0 +1,12 @@
+<div id="wrapper">
+    <app-navbar-student [isToggled]="isToggled" (toggled)="isToggled=!isToggled"></app-navbar-student>
+  <div class="d-flex flex-column" id="content-wrapper">
+    <div id="content">
+            <app-header (toggled)="isToggled=!isToggled"></app-header>
+      <router-outlet></router-outlet>
+    </div>
+        <app-footer></app-footer>
+  </div>
+</div>
+
+

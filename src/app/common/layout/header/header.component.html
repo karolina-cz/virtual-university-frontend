@@ -1,0 +1,23 @@
+<nav class="navbar navbar-light navbar-expand bg-white shadow mb-4 topbar static-top">
+  <div class="container-fluid">
+    <button class="btn btn-link d-md-none rounded-circle mr-3" id="sidebarToggleTop" (click)="onToggleClicked()" type="button"><i
+      class="fas fa-bars"></i></button>
+    <ul class="nav navbar-nav flex-nowrap ml-auto">
+      <div class="d-none d-sm-block topbar-divider"></div>
+      <li class="nav-item dropdown no-arrow">
+        <div class="nav-item dropdown no-arrow"><a class="dropdown-toggle nav-link" data-toggle="dropdown"
+                                                   aria-expanded="false" href="#"><span
+          class="d-none d-lg-inline mr-2 text-gray-600 small">{{name}}</span><img
+          class="border rounded-circle img-profile" src="assets/images/avatar.png"></a>
+          <div
+            class="dropdown-menu shadow dropdown-menu-right animated--grow-in"><a class="dropdown-item"
+                                                                                  routerLink="/profile">
+            <fa-icon class="text-gray-400" [icon]="faUser"></fa-icon>&nbsp;Profil</a>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item" (click)="onLogoutClicked()"><fa-icon class="text-gray-400" [icon]="faSignOut"></fa-icon>&nbsp;Wyloguj się</button>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+</nav>

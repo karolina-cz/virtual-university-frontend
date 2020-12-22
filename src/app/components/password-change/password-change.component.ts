@@ -15,14 +15,17 @@ export class PasswordChangeComponent implements OnInit {
   code;
   submitClicked = false;
   isSuccessful;
+  isCodeValid: boolean;
 
   constructor(private formBuilder: FormBuilder, private route: ActivatedRoute, private userAuthService: UserAuthService ) {
   }
 
   ngOnInit(): void {
+    this.route.data.subscribe((data) => {
+      this.isCodeValid = data.isCodeValid;
+    });
     this.route.queryParams.subscribe(params => {
       this.code = params.code;
-      console.log(this.code);
     });
     this.myForm = this.formBuilder.group({
       password: ['', [
@@ -50,15 +53,16 @@ export class PasswordChangeComponent implements OnInit {
   }
 
   onSave(): void {
-    console.log(this.isSuccessful);
     if (this.myForm.valid) {
       this.userAuthService.changePassword(this.password.value, this.code).subscribe(
-        (data) => {this.isSuccessful = true; console.log(data); },
+        (data) => {this.isSuccessful = true; },
         () => this.isSuccessful = false
       );
     } else {
       this.submitClicked = true;
     }
   }
+
+
 
 }

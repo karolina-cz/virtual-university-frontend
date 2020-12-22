@@ -1,17 +1,15 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import {LoginComponent} from './components/login/login.component';
+import {NgModule} from '@angular/core';
+import {Routes, RouterModule} from '@angular/router';
 import {HomeComponent} from './components/home/home.component';
-import {PasswordChangeComponent} from './components/password-change/password-change.component';
+import {AuthGuard} from './core/services/auth.guard';
 
 const routes: Routes = [
-  {path: 'login', component: LoginComponent},
-  {path: 'home', component: HomeComponent},
-  {path: 'change-password', component: PasswordChangeComponent}
+  {path: '', redirectTo: '/home', pathMatch: 'full'}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}

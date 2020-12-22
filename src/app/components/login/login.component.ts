@@ -1,5 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {UserAuthService} from '../../core/services/user-auth.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -8,7 +10,10 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 })
 export class LoginComponent implements OnInit {
   myForm: FormGroup;
-  constructor(private formBuilder: FormBuilder) { }
+  areCredentialsInvalid: boolean;
+
+  constructor(private formBuilder: FormBuilder, private authService: UserAuthService, private router: Router) {
+  }
 
   ngOnInit(): void {
     this.myForm = this.formBuilder.group({
@@ -17,6 +22,27 @@ export class LoginComponent implements OnInit {
       ]],
       password: ['', Validators.required]
     });
+  }
+
+  get password() {
+    return this.myForm.get('password');
+  }
+
+  get username() {
+    return this.myForm.get('username');
+  }
+
+  onLoginClicked() {
+    if (this.myForm.valid) {
+        this.authService.login(this.username.value, this.password.value).subscribe(
+          (data) => {
+            this.router.navigate(['/home']);
+            },
+          () => {
+            this.areCredentialsInvalid = true;
+          }
+        );
+    }
   }
 
 }

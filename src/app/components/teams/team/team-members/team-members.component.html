@@ -1,0 +1,37 @@
+<div class="card shadow mb-3">
+  <div class="card-header py-3">
+    <div class="row">
+      <div class="col-md-6 text-nowrap">
+        <p class="m-0 font-weight-bold text-primary">
+          <fa-icon class="m-1" [icon]="faUser"></fa-icon>
+          Członkowie zespołu
+        </p>
+      </div>
+      <div class="col-md-6">
+        <div class="text-md-right">
+          <button *ngIf="!isEditingModeOn" class="btn btn-primary btn-sm" (click)="isEditingModeOn = !isEditingModeOn">
+            <fa-icon class="m-1" [icon]="faPencil"></fa-icon>
+            Edytuj</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body">
+<!--    <form *ngIf="isEditingModeOn" class="form-inline d-none d-sm-inline-block mb-3">-->
+      <div *ngIf="isEditingModeOn" class="input-group">
+        <div class="input-group-append align-items-center bg-light">
+          <fa-icon class="m-1" [icon]="faSearch"></fa-icon>
+        </div>
+        <input class="bg-light form-control small" placeholder="Dodaj członka grupy..."/>
+      </div>
+<!--    </form>-->
+    <ol>
+      <li *ngFor="let item of teamMembers; let i = index"> {{item.firstname}} {{item.lastname}}&nbsp;&nbsp;<fa-icon *ngIf="isEditingModeOn" class="pointer text-danger" [icon]="faTimes"></fa-icon>
+      </li>
+    </ol>
+    <div *ngIf="isEditingModeOn" class="text-md-right">
+      <button class=" mx-1 btn btn-secondary btn-sm" type="submit" (click)="onCancelClicked()">Anuluj</button>
+      <button class="btn btn-primary btn-sm" type="submit" (click)="onSaveClicked()">Zapisz</button>
+    </div>
+  </div>
+</div>
