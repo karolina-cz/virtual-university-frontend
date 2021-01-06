@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {NgbCalendar, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {faFileAlt, faPlus, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
+import {User} from '../../../core/models/user.model';
+import {Team} from '../../../core/models/team/team.model';
 
 @Component({
   selector: 'app-team',
@@ -10,12 +12,18 @@ import {faFileAlt, faPlus, faQuestionCircle} from '@fortawesome/free-solid-svg-i
 })
 export class TeamComponent implements OnInit {
   teamId;
+  team: Team;
   model: NgbDateStruct;
   faFileAlt = faFileAlt;
   fileName = 'Nie wybrano pliku';
   faPlus = faPlus;
-  faQuestionCircle =faQuestionCircle;
-  constructor(private route: ActivatedRoute, private calendar: NgbCalendar) {
+  faQuestionCircle = faQuestionCircle;
+  constructor(private route: ActivatedRoute) {
+    const members = [
+      new User('kowalska', 'Anna', 'Kowalska', true),
+      new User('nowakp', 'Piotr', 'Nowak', true),
+      new User('kote', 'Estera', 'Kot', true)];
+    this.team = new Team('Projekt inżynierski', 'Projekt inżynierski wykorzystujący Spring i Angular', members, null, null);
   }
 
   ngOnInit(): void {

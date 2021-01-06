@@ -11,22 +11,33 @@
         <div class="text-md-right">
           <button *ngIf="!isEditingModeOn" class="btn btn-primary btn-sm" (click)="isEditingModeOn = !isEditingModeOn">
             <fa-icon class="m-1" [icon]="faPencil"></fa-icon>
-            Edytuj</button>
+            Edytuj
+          </button>
         </div>
       </div>
     </div>
   </div>
   <div class="card-body">
-<!--    <form *ngIf="isEditingModeOn" class="form-inline d-none d-sm-inline-block mb-3">-->
-      <div *ngIf="isEditingModeOn" class="input-group">
-        <div class="input-group-append align-items-center bg-light">
-          <fa-icon class="m-1" [icon]="faSearch"></fa-icon>
-        </div>
-        <input class="bg-light form-control small" placeholder="Dodaj członka grupy..."/>
-      </div>
-<!--    </form>-->
+    <div *ngIf="isEditingModeOn" class="input-group">
+      <form class="example-form mx-3">
+        <span><fa-icon [icon]="faSearch"></fa-icon></span>
+        <input type="text"
+               placeholder="Dodaj członka grupy"
+               class="input-group-append align-items-center bg-light border-0 p-2 mx-1 d-inline border"
+               [formControl]="myControl"
+               [matAutocomplete]="auto"/>
+        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+          <mat-option (click)="optionClicked(option)" *ngFor="let option of autoCompleteItems | async"
+                      [value]="option.firstname + ' ' + option.lastname">
+            {{option.firstname}} {{option.lastname}}
+          </mat-option>
+        </mat-autocomplete>
+      </form>
+    </div>
     <ol>
-      <li *ngFor="let item of teamMembers; let i = index"> {{item.firstname}} {{item.lastname}}&nbsp;&nbsp;<fa-icon *ngIf="isEditingModeOn" class="pointer text-danger" [icon]="faTimes"></fa-icon>
+      <li *ngFor="let item of members; let i = index"> {{item.firstname}} {{item.lastname}}
+        (<small>{{item.username}}</small>)&nbsp;&nbsp;<fa-icon *ngIf="isEditingModeOn" class="pointer text-danger"
+                                                               [icon]="faTimes"></fa-icon>
       </li>
     </ol>
     <div *ngIf="isEditingModeOn" class="text-md-right">

@@ -1,7 +1,5 @@
 <div class="container-fluid">
-  <button routerLink="/teams" class="btn btn-circle btn-secondary btn-sm mx-1"><</button>
-  <small>Wróć do listy</small>
-  <h5 class="text-dark mb-4 text-center">Projekt zespołowy</h5>
+  <app-team-header [title]="team.title"></app-team-header>
   <ul class="nav nav-tabs">
     <li class="nav-item"><a class="nav-link active">Zespół</a></li>
     <li class="nav-item"><a class="nav-link" routerLink="calendar">Kalendarz zespołu</a></li>
@@ -12,11 +10,12 @@
       <div class="card-header py-3">
         <h6 class="text-primary font-weight-bold m-0">
           <fa-icon [icon]="faQuestionCircle"></fa-icon>
-          Informacje ogólne</h6>
+          Informacje ogólne
+        </h6>
       </div>
       <div class="card-body shadow">
-        <p class="">Temat: Projekt zespołowy</p>
-        <p class="small">Opis: djcnekwi bhcwdjcnekwibh cwdjcnekwibhcwdj cnekwibhcw djcnekwibhcwdjcnek ibhcwdjcnekwib hcwdjcnekwib hcwdjcnekwibhcwd jcnekwibhcwdjcnekwibhc wdjcnekwibhcwdjcnekwibhcwdjcnekwibh cwdjcnek wib hcwdjcn ekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcwdjcnekwibhcw</p>
+        <p class="">Temat: {{team.title}}</p>
+        <p class="small">Opis: {{team.description}}</p>
       </div>
     </div>
     <div class="row mb-3">
@@ -27,7 +26,8 @@
               <div class="col-md-6 text-nowrap">
                 <p class="m-0 font-weight-bold text-primary">
                   <fa-icon class="m-1" [icon]="faFileAlt"></fa-icon>
-                  Materiały</p>
+                  Materiały
+                </p>
               </div>
               <div class="col-md-6">
                 <div class="text-md-right">
@@ -37,28 +37,33 @@
                   </button>
 
                   <!-- Modal -->
-                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog"
+                       aria-labelledby="exampleModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
                           <h5 class="modal-title" id="exampleModalLabel">
                             <fa-icon class="m-1" [icon]="faFileAlt"></fa-icon>
-                            Prześlij plik</h5>
+                            Prześlij plik
+                          </h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div>
                         <div class="modal-body">
                           <form class="text-left">
-                            <div >
-                              <label class="btn btn-light" for="file-input">Wybierz plik</label><span>{{fileName}}</span>
-                              <input id="file-input" hidden  type="file" (change)="onFileSelected($event.target)"/>
+                            <div>
+                              <label class="btn btn-light" for="file-input">Wybierz
+                                plik</label><span>{{fileName}}</span>
+                              <input id="file-input" hidden type="file" (change)="onFileSelected($event.target)"/>
                             </div>
                           </form>
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Anuluj</button>
-                          <button (click)="onSaveFileClicked()" data-dismiss="modal" type="button" class="btn btn-primary btn-sm">Zapisz</button>
+                          <button (click)="onSaveFileClicked()" data-dismiss="modal" type="button"
+                                  class="btn btn-primary btn-sm">Zapisz
+                          </button>
                         </div>
                       </div>
                     </div>
@@ -79,9 +84,10 @@
       <div class="col-lg-5">
         <div class="row">
           <div class="col">
-            <app-team-members></app-team-members>
+            <app-team-members [members]="team.members"></app-team-members>
           </div>
         </div>
       </div>
+    </div>
   </div>
 </div>

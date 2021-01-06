@@ -14,6 +14,7 @@ import {LoginModule} from './components/login/login.module';
 import {HomeModule} from './components/home/home.module';
 import {TeamsModule} from './components/teams/teams.module';
 import {ProfileModule} from './components/profile/profile.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import {ProfileModule} from './components/profile/profile.module';
     LoginModule,
     HomeModule,
     TeamsModule,
-    ProfileModule
+    ProfileModule,
+    BrowserAnimationsModule
   ],
   exports: [],
   providers: [],

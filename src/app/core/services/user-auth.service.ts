@@ -43,12 +43,12 @@ export class UserAuthService {
       password
     };
     // @ts-ignore
-    return this.http.post<any>(this.url + 'auth/login/', body, {responseType: 'text', withCredentials: true}).pipe(
+    return this.http.post<any>(this.url + 'auth/login/', body, { withCredentials: true}).pipe(
       map((data) => {
-        this.currentUser = new User('czachork', 'Karolina', 'Czachorska', 'student');
-        localStorage.setItem('user', JSON.stringify(new User('czachork', 'Karolina', 'Czachorska', 'student')));
+        const isStudent = data.Type_of_Member__c === 'Student';
+        this.currentUser = new User(username, data.First_Name__c, data.Lastname__c, isStudent);
+        localStorage.setItem('user', JSON.stringify(this.currentUser));
         return data;
-        // tutaj bedzie ustawienie danych usera
       }),
       catchError(() => throwError('Invalid login credentials'))
     );
@@ -57,6 +57,7 @@ export class UserAuthService {
   logout() {
     localStorage.removeItem('user');
     this.currentUser = null;
-    // tutaj bedzie request do zmiany ciasteczka na expiration time w przeszłości
+    // @ts-ignore
+    this.http.get<any>(this.url + 'auth/logout', {responseType: 'text', withCredentials: true}).subscribe();
   }
 }

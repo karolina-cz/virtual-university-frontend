@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {UserAuthService} from '../../../core/services/user-auth.service';
 
 @Component({
   selector: 'app-main-layout',
@@ -7,8 +8,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MainLayoutComponent implements OnInit {
   isToggled = false;
+  isStudent;
 
-  constructor() {
+  constructor(private service: UserAuthService) {
+    this.isStudent = service.currentUserValue.isStudent;
     if (window.innerWidth < 500){
       this.isToggled = true;
     }

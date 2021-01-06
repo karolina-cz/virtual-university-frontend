@@ -1,5 +1,6 @@
 <div id="wrapper">
-    <app-navbar-student [isToggled]="isToggled" (toggled)="isToggled=!isToggled"></app-navbar-student>
+    <app-navbar-student *ngIf="isStudent" [isToggled]="isToggled" (toggled)="isToggled=!isToggled"></app-navbar-student>
+  <app-navbar-teacher *ngIf="!isStudent" [isToggled]="isToggled" (toggled)="isToggled=!isToggled"></app-navbar-teacher>
   <div class="d-flex flex-column" id="content-wrapper">
     <div id="content">
             <app-header (toggled)="isToggled=!isToggled"></app-header>

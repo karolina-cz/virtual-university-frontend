@@ -24,10 +24,10 @@
           </thead>
           <tbody>
           <tr style="cursor:pointer" *ngFor="let item of teams; let i = index" (click)="onTeamSelected(i)">
-            <td>{{item.name}}</td>
+            <td>{{item.title}}</td>
             <td style="text-overflow: ellipsis;">
               <p
-                style="text-overflow: ellipsis;width: 30ch;overflow: hidden;white-space: nowrap;">
+                style="text-overflow: ellipsis;width: 40ch;overflow: hidden;white-space: nowrap;">
                 {{item.description}}</p>
             </td>
           </tr>
@@ -42,18 +42,18 @@
       </div>
       <div class="row">
         <div class="col-md-6 align-self-center">
-          <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Wyświetlono 1 do 10 z
-            27</p>
+          <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">Wyświetlono {{displayedFrom}} do {{displayedTo}} z
+            {{teamsCount}}</p>
         </div>
         <div class="col-md-6">
           <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
             <ul class="pagination">
-              <li class="page-item disabled"><a class="page-link" href="#" aria-label="Previous"><span
+              <li class="page-item disabled"><a class="page-link" aria-label="Previous"><span
                 aria-hidden="true">«</span></a></li>
-              <li class="page-item active"><a class="page-link" href="#">1</a></li>
-              <li class="page-item"><a class="page-link" href="#">2</a></li>
-              <li class="page-item"><a class="page-link" href="#">3</a></li>
-              <li class="page-item"><a class="page-link" href="#" aria-label="Next"><span
+              <li class="page-item active"><a class="page-link" >1</a></li>
+              <li class="page-item"><a class="page-link" >2</a></li>
+              <li class="page-item"><a class="page-link" >3</a></li>
+              <li class="page-item"><a class="page-link" aria-label="Next"><span
                 aria-hidden="true">»</span></a></li>
             </ul>
           </nav>
