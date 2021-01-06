@@ -9,7 +9,7 @@
       </div>
       <div class="col-md-6">
         <div class="text-md-right">
-          <button *ngIf="!isEditingModeOn" class="btn btn-primary btn-sm" (click)="isEditingModeOn = !isEditingModeOn">
+          <button *ngIf="!isEditingModeOn" class="btn btn-primary btn-sm" (click)="onEditClicked()">
             <fa-icon class="m-1" [icon]="faPencil"></fa-icon>
             Edytuj
           </button>
@@ -35,8 +35,8 @@
       </form>
     </div>
     <ol>
-      <li *ngFor="let item of members; let i = index"> {{item.firstname}} {{item.lastname}}
-        (<small>{{item.username}}</small>)&nbsp;&nbsp;<fa-icon *ngIf="isEditingModeOn" class="pointer text-danger"
+      <li class="my-1" *ngFor="let item of members; let i = index"> {{item.firstname}} {{item.lastname}}
+        (<small>{{item.username}}</small>)&nbsp;&nbsp;<fa-icon (click)="onRemoveMemberClicked(item, i)" *ngIf="isEditingModeOn" class="pointer text-danger"
                                                                [icon]="faTimes"></fa-icon>
       </li>
     </ol>
