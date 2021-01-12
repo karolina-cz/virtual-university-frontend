@@ -7,6 +7,7 @@ import {FormControl} from '@angular/forms';
 import {map, startWith} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {TeamsService} from '../../../../core/services/teams.service';
+import {UserAuthService} from '../../../../core/services/user-auth.service';
 
 @Component({
   selector: 'app-team-members',
@@ -30,8 +31,11 @@ export class TeamMembersComponent implements OnInit {
   removedMembers: User[] = [];
   addedMembers: User[] = [];
   membersCopy: User[] = [];
+  isCurrentUserTeacher: boolean;
   @Input() members: User[];
-  constructor(private teamsService: TeamsService) { }
+  constructor(private teamsService: TeamsService, private authService: UserAuthService) {
+    this.isCurrentUserTeacher = this.authService.currentUserValue.isStudent === false;
+  }
 
   ngOnInit(): void {
     this.autoCompleteItems = this.myControl.valueChanges.pipe(

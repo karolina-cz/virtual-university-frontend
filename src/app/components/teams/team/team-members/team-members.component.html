@@ -9,7 +9,7 @@
       </div>
       <div class="col-md-6">
         <div class="text-md-right">
-          <button *ngIf="!isEditingModeOn" class="btn btn-primary btn-sm" (click)="onEditClicked()">
+          <button *ngIf="!isEditingModeOn && isCurrentUserTeacher" class="btn btn-primary btn-sm" (click)="onEditClicked()">
             <fa-icon class="m-1" [icon]="faPencil"></fa-icon>
             Edytuj
           </button>
