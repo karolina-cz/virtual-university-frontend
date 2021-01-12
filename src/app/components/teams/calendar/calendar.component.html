@@ -8,14 +8,14 @@
         [(viewDate)]="viewDate"
         (viewDateChange)="closeOpenMonthViewDay()"
       >
-        Previous
+        Poprzedni
       </div>
       <div
         class="btn btn-outline-secondary"
         mwlCalendarToday
         [(viewDate)]="viewDate"
       >
-        Today
+        Dzisiaj
       </div>
       <div
         class="btn btn-primary"
@@ -24,12 +24,12 @@
         [(viewDate)]="viewDate"
         (viewDateChange)="closeOpenMonthViewDay()"
       >
-        Next
+        Następny
       </div>
     </div>
   </div>
   <div class="col-md-4">
-    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    <h3>{{ viewDate | calendarDate:(view + 'ViewTitle'):'pl' }}</h3>
   </div>
   <div class="col-md-4">
     <div class="btn-group">
@@ -38,21 +38,21 @@
         (click)="setView(CalendarView.Month)"
         [class.active]="view === CalendarView.Month"
       >
-        Month
+        Miesiąc
       </div>
       <div
         class="btn btn-primary"
         (click)="setView(CalendarView.Week)"
         [class.active]="view === CalendarView.Week"
       >
-        Week
+        Tydzień
       </div>
       <div
         class="btn btn-primary"
         (click)="setView(CalendarView.Day)"
         [class.active]="view === CalendarView.Day"
       >
-        Day
+        Dzień
       </div>
     </div>
   </div>
@@ -60,6 +60,7 @@
 <br />
 <div [ngSwitch]="view">
   <mwl-calendar-month-view
+    [locale]="locale"
     *ngSwitchCase="CalendarView.Month"
     [viewDate]="viewDate"
     [events]="events"
@@ -71,6 +72,7 @@
   >
   </mwl-calendar-month-view>
   <mwl-calendar-week-view
+    [locale]="locale"
     *ngSwitchCase="CalendarView.Week"
     [viewDate]="viewDate"
     [events]="events"
@@ -80,6 +82,7 @@
   >
   </mwl-calendar-week-view>
   <mwl-calendar-day-view
+    [locale]="locale"
     *ngSwitchCase="CalendarView.Day"
     [viewDate]="viewDate"
     [events]="events"
@@ -143,6 +146,7 @@
         <input
           class="form-control"
           type="text"
+          [locale]="'Polish'"
           mwlFlatpickr
           [(ngModel)]="event.start"
           (ngModelChange)="refresh.next()"
@@ -159,6 +163,7 @@
         <input
           class="form-control"
           type="text"
+          [locale]="'Polish'"
           mwlFlatpickr
           [(ngModel)]="event.end"
           (ngModelChange)="refresh.next()"

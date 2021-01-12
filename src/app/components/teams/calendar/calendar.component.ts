@@ -22,6 +22,8 @@ import {
   CalendarEventTimesChangedEvent,
   CalendarView,
 } from 'angular-calendar';
+import {flatpickrFactory} from '../teams.module';
+
 
 const colors: any = {
   red: {
@@ -50,6 +52,7 @@ export class CalendarComponent implements OnInit {
   // TODO po kliknieciu olowka powinna byc mozliwosc edycji, anulowania/zapisania zmian
   constructor(private modal: NgbModal) {}
   @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+  locale = 'pl';
 
   view: CalendarView = CalendarView.Month;
 
@@ -126,6 +129,7 @@ export class CalendarComponent implements OnInit {
   activeDayIsOpen = true;
 
   ngOnInit(): void {
+    flatpickrFactory();
   }
 
   dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {

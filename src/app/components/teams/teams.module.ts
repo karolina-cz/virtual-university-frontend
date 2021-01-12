@@ -19,6 +19,13 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlatpickrModule } from 'angularx-flatpickr';
+import flatpickr from 'flatpickr';
+import {Polish} from 'flatpickr/dist/l10n/pl';
+
+export function flatpickrFactory() {
+  flatpickr.localize(Polish);
+  return flatpickr;
+}
 @NgModule({
   declarations: [TeamsComponent, TeamComponent, TeamMembersComponent, TeamCalendarComponent, TeamHeaderComponent, CalendarComponent],
   imports: [

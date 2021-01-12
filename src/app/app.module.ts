@@ -17,6 +17,11 @@ import {ProfileModule} from './components/profile/profile.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import {registerLocaleData} from '@angular/common';
+import localePl from '@angular/common/locales/pl';
+
+registerLocaleData(localePl);
+
 
 @NgModule({
   declarations: [
