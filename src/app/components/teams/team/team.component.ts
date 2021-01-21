@@ -28,16 +28,13 @@ export class TeamComponent implements OnInit {
 
   ngOnInit(): void {
     this.teamId = this.route.snapshot.params.id;
-    console.log(this.teamId);
   }
 
   onDateSelected(event){
-    console.log('selected');
   }
 
   onFileSelected(target){
     this.fileName = target.files[0].name;
-    console.log(target.files);
   }
 
   onSaveFileClicked(){

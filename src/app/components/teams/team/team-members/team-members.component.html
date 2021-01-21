@@ -9,7 +9,8 @@
       </div>
       <div class="col-md-6">
         <div class="text-md-right">
-          <button *ngIf="!isEditingModeOn && isCurrentUserTeacher" class="btn btn-primary btn-sm" (click)="onEditClicked()">
+          <button *ngIf="!isEditingModeOn && isCurrentUserTeacher" class="btn btn-primary btn-sm"
+                  (click)="onEditClicked()">
             <fa-icon class="m-1" [icon]="faPencil"></fa-icon>
             Edytuj
           </button>
@@ -27,6 +28,11 @@
                [formControl]="myControl"
                [matAutocomplete]="auto"/>
         <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+          <mat-option *ngIf="isLoading">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </mat-option>
           <mat-option (click)="optionClicked(option)" *ngFor="let option of autoCompleteItems | async"
                       [value]="option.firstname + ' ' + option.lastname">
             {{option.firstname}} {{option.lastname}}
@@ -36,7 +42,8 @@
     </div>
     <ol>
       <li class="my-1" *ngFor="let item of members; let i = index"> {{item.firstname}} {{item.lastname}}
-        (<small>{{item.username}}</small>)&nbsp;&nbsp;<fa-icon (click)="onRemoveMemberClicked(item, i)" *ngIf="isEditingModeOn" class="pointer text-danger"
+        (<small>{{item.username}}</small>)&nbsp;&nbsp;<fa-icon (click)="onRemoveMemberClicked(item, i)"
+                                                               *ngIf="isEditingModeOn" class="pointer text-danger"
                                                                [icon]="faTimes"></fa-icon>
       </li>
     </ol>

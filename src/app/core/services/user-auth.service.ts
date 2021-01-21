@@ -9,7 +9,7 @@ import {User} from '../models/user.model';
 })
 export class UserAuthService {
   url = 'https://wuback.herokuapp.com/';
-  private currentUser; // tutaj bedzi etype user
+  private currentUser;
 
   constructor(private http: HttpClient) {
     this.currentUser = JSON.parse(localStorage.getItem('user'));

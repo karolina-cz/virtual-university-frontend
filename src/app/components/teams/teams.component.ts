@@ -29,7 +29,6 @@ export class TeamsComponent implements OnInit {
   }
 
   onTeamSelected(index: number){
-    console.log(index);
     this.router.navigate(['/teams/' + index]);
   }
 

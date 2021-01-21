@@ -3,7 +3,8 @@ import {environment} from '../../../environments/environment';
 import {HttpClient} from '@angular/common/http';
 import {Team} from '../models/team/team.model';
 import {User} from '../models/user.model';
-import {Observable, of} from 'rxjs';
+import {Observable, of, throwError} from 'rxjs';
+import {catchError, map} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -20,44 +21,19 @@ export class TeamsService {
   getTeams() {
   }
 
-  getUsersByPattern() {
-    const data = {
-      users: [{
-        username: 'deadbef731',
-        firstname: 'Juliusz',
-        lastname: 'Cezar',
-        isStudent: true
-      },
-      {
-        username: 'deadbef732',
-        firstname: 'Julia',
-        lastname: 'Szpak',
-        isStudent: true
-      },
-      {
-        username: 'deadbef733',
-        firstname: 'Julia',
-        lastname: 'Dąbrowska',
-        isStudent: true
-      },
-      {
-        username: 'deadbef734',
-        firstname: 'Janina',
-        lastname: 'Kot',
-        isStudent: true
-      },
-      {
-        username: 'deadbef735',
-        firstname: 'Janusz',
-        lastname: 'Kot',
-        isStudent: true
-      }
-      ]
+  getUsersByPattern(pattern) {
+    const body = {
+      pattern
     };
-    const users = [];
-    for (const item of data.users) {
-      users.push(new User(item.username, item.firstname, item.lastname, item.isStudent));
-    }
-    return users;
+    return this.httpClient.post<any>(this.baseUrl + 'collab/getMatchingNames/', body, { withCredentials: true}).pipe(
+      map((data) => {
+        const users = [];
+        for (const item of data.users) {
+          users.push(new User(item.username, item.firstname, item.lastname, item.isStudent));
+        }
+        return users;
+      }),
+      catchError(() => of([]))
+    );
   }
 }
