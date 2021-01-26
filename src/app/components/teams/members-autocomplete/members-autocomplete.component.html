@@ -1,0 +1,28 @@
+<div *ngIf="isEditingModeOn" class="input-group">
+  <form class="example-form">
+    <span><fa-icon [icon]="faSearch"></fa-icon></span>
+    <input type="text"
+           placeholder="Dodaj członka grupy"
+           class="input-group-append align-items-center bg-light border-0 p-2 mx-1 d-inline border"
+           [formControl]="myControl"
+           [matAutocomplete]="auto"/>
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngIf="isLoading">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </mat-option>
+      <mat-option (click)="optionClicked(option)" *ngFor="let option of autoCompleteItems | async"
+                  [value]="option.firstname + ' ' + option.lastname">
+        {{option.firstname}} {{option.lastname}}
+      </mat-option>
+    </mat-autocomplete>
+  </form>
+</div>
+<ol>
+  <li class="my-1" *ngFor="let item of members; let i = index"> {{item.firstname}} {{item.lastname}}
+    (<small>{{item.username}}</small>)&nbsp;&nbsp;<fa-icon (click)="onRemoveMemberClicked(item, i)"
+                                                           *ngIf="isEditingModeOn" class="pointer text-danger"
+                                                           [icon]="faTimes"></fa-icon>
+  </li>
+</ol>

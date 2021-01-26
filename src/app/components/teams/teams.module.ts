@@ -21,13 +21,18 @@ import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import flatpickr from 'flatpickr';
 import {Polish} from 'flatpickr/dist/l10n/pl';
+import { MembersAutocompleteComponent } from './members-autocomplete/members-autocomplete.component';
+import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog';
+import { AddTeamDialogComponent } from './add-team-dialog/add-team-dialog.component';
+import {ToastrModule} from 'ngx-toastr';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 export function flatpickrFactory() {
   flatpickr.localize(Polish);
   return flatpickr;
 }
 @NgModule({
-  declarations: [TeamsComponent, TeamComponent, TeamMembersComponent, TeamCalendarComponent, TeamHeaderComponent, CalendarComponent],
+  declarations: [TeamsComponent, TeamComponent, TeamMembersComponent, TeamCalendarComponent, TeamHeaderComponent, CalendarComponent, MembersAutocompleteComponent, AddTeamDialogComponent],
   imports: [
     CommonModule,
     TeamsRoutingModule,
@@ -40,9 +45,16 @@ export function flatpickrFactory() {
     ReactiveFormsModule,
     MatInputModule,
     NgbModalModule,
+    MatDialogModule,
+    BrowserAnimationsModule,
+    ToastrModule.forRoot(),
     FlatpickrModule.forRoot(),
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
-  exports: [TeamsComponent]
+  exports: [TeamsComponent],
+  bootstrap: [MembersAutocompleteComponent],
+  providers: [
+  MatDialog
+]
 })
 export class TeamsModule { }

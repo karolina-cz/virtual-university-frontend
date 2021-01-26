@@ -5,6 +5,7 @@ import {Team} from '../models/team/team.model';
 import {User} from '../models/user.model';
 import {Observable, of, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
+import {UserAuthService} from './user-auth.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,21 @@ import {catchError, map} from 'rxjs/operators';
 export class TeamsService {
   baseUrl = environment.baseUrl;
 
-  constructor(private httpClient: HttpClient) {
+  constructor(private httpClient: HttpClient, private authService: UserAuthService) {
+  }
+
+  addTeam(subject, description, teamMembers){
+    const teacherId = this.authService.currentUserValue.username;
+    const body = {
+      subject,
+      description,
+      teacher_id: teacherId,
+      team_members: teamMembers
+    };
+    // @ts-ignore
+    return this.httpClient.post<any>(this.baseUrl + 'collab/createTeam/', body, {withCredentials: true}).pipe(
+      catchError(() => of(''))
+    );
   }
 
   getTeamInfo() {
@@ -22,6 +37,7 @@ export class TeamsService {
   }
 
   getUsersByPattern(pattern) {
+    const userId = this.authService.currentUserValue.username;
     const body = {
       pattern
     };
@@ -29,7 +45,9 @@ export class TeamsService {
       map((data) => {
         const users = [];
         for (const item of data.users) {
-          users.push(new User(item.username, item.firstname, item.lastname, item.isStudent));
+          if (item.username !== userId) {
+            users.push(new User(item.username, item.firstname, item.lastname, item.isStudent));
+          }
         }
         return users;
       }),

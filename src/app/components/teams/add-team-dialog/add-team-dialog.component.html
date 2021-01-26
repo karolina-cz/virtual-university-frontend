@@ -1,0 +1,31 @@
+<h2 mat-dialog-title>Dodaj zespół</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="modal-body">
+    <form [formGroup]="myForm" class="text-left">
+      <div class="form-group">
+        <label for="teamTitle"><strong>Nazwa zespołu</strong></label>
+        <input formControlName="title" class="form-control" type="text" id="teamTitle" name="teamTitle"/>
+        <div *ngIf="title.errors?.required && ((title.touched) || submitClicked)">
+          <p class="validation-message text-danger">Nazwa zespołu jest wymagana</p>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="formControlTextarea"><strong>Opis zespołu</strong></label>
+        <textarea formControlName="description" class="form-control" id="formControlTextarea" rows="5"></textarea>
+      </div>
+    </form>
+    <app-members-autocomplete ></app-members-autocomplete>
+  </div>
+</mat-dialog-content>
+<hr/>
+<mat-dialog-actions align="end">
+  <div>
+    <button type="button" class="btn btn-secondary btn-sm mx-2" data-dismiss="modal"
+            (click)="onCancelNewTeamClicked()" mat-dialog-close>Anuluj
+    </button>
+    <button (click)="onSaveNewTeamClicked()" data-dismiss="modal" type="button"
+            class="btn btn-primary btn-sm" >Zapisz
+    </button>
+  </div>
+</mat-dialog-actions>
+
