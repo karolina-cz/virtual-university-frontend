@@ -13,7 +13,8 @@ export class AddTeamDialogComponent implements OnInit {
   @ViewChild(MembersAutocompleteComponent) memberAutocomplete: MembersAutocompleteComponent;
   myForm: FormGroup;
   submitClicked = false;
-  constructor(public dialogRef: MatDialogRef<AddTeamDialogComponent>, private formBuilder: FormBuilder, private teamsService: TeamsService) { }
+  constructor(public dialogRef: MatDialogRef<AddTeamDialogComponent>, private formBuilder: FormBuilder,
+              private teamsService: TeamsService) { }
 
   ngOnInit(): void {
     this.myForm = this.formBuilder.group({
@@ -32,9 +33,6 @@ export class AddTeamDialogComponent implements OnInit {
     return this.myForm.get('description');
   }
 
-  onCancelNewTeamClicked(){
-  }
-
   onSaveNewTeamClicked(){
     this.submitClicked = true;
     if (this.myForm.valid) {
@@ -48,7 +46,6 @@ export class AddTeamDialogComponent implements OnInit {
       }
       );
     }
-    // TODO add validation - title not empty
   }
 
 }

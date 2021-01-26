@@ -7,6 +7,7 @@ import {MembersAutocompleteComponent} from './members-autocomplete/members-autoc
 import {AddTeamDialogComponent} from './add-team-dialog/add-team-dialog.component';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ToastrService} from 'ngx-toastr';
+import {UserAuthService} from '../../core/services/user-auth.service';
 
 @Component({
   selector: 'app-teams',
@@ -18,7 +19,9 @@ export class TeamsComponent implements OnInit {
   teamsCount = 5;
   displayedFrom = 1;
   displayedTo = 5;
-  constructor(private router: Router, public dialog: MatDialog, private toastr: ToastrService) {
+  isTeacher = false;
+  constructor(private router: Router, public dialog: MatDialog, private toastr: ToastrService, private authService: UserAuthService) {
+    this.isTeacher = !this.authService.currentUserValue.isStudent;
     const members = [
       new User('kowalska', 'Anna', 'Kowalska', true),
       new User('nowakp', 'Piotr', 'Nowak', true),

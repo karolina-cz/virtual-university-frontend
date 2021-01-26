@@ -24,9 +24,6 @@ export class MembersAutocompleteComponent implements OnInit{
   membersCopy: User[] = [];
   whitespaceStringRegex = new RegExp('\\S');
   isLoading = false;
-
-  // @Input() members: User[];
-  // @Input() isEditingModeOn: boolean;
   members: User[] = [];
   isEditingModeOn = true;
 

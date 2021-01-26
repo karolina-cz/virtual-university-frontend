@@ -9,8 +9,10 @@ import {User} from '../../core/models/user.model';
 })
 export class ProfileComponent implements OnInit {
   user: User;
+  memberType;
   constructor(private authService: UserAuthService) {
     this.user = authService.currentUserValue;
+    this.memberType = this.user.isStudent ? 'Student' : 'Nauczyciel';
   }
 
   ngOnInit(): void {
