@@ -23,7 +23,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr style="cursor:pointer" *ngFor="let item of teams; let i = index" (click)="onTeamSelected(i)">
+          <tr style="cursor:pointer" *ngFor="let item of teams | async; let i = index" (click)="onTeamSelected(item.id)">
             <td>{{item.title}}</td>
             <td style="text-overflow: ellipsis;">
               <p
@@ -49,12 +49,17 @@
         <div class="col-md-6">
           <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
             <ul class="pagination">
-              <li class="page-item disabled"><a class="page-link" aria-label="Previous"><span
+              <li [ngClass]="{'disabled': page <= 1}" class="page-item"><a class="page-link pointer"
+                                       [routerLink]="['/teams']"
+                                       [queryParams]="{page: page-1}"
+                                       aria-label="Previous"><span
                 aria-hidden="true">«</span></a></li>
-              <li class="page-item active"><a class="page-link">1</a></li>
-              <li class="page-item"><a class="page-link">2</a></li>
-              <li class="page-item"><a class="page-link">3</a></li>
-              <li class="page-item"><a class="page-link" aria-label="Next"><span
+              <li *ngFor="let item of paginationButtonsValues; let i = index" [ngClass]="{'active': item == page, 'disabled': item > totalPagesCount}"
+                  class="page-item"><a
+                [routerLink]="['/teams']" [queryParams]="{page: item}"
+                class="page-link">{{item}}</a></li>
+              <li [ngClass]="{'disabled': page >= totalPagesCount}" class="page-item"><a class="page-link pointer" aria-label="Next" [routerLink]="['/teams']"
+                                       [queryParams]="{page: page+1}"><span
                 aria-hidden="true">»</span></a></li>
             </ul>
           </nav>

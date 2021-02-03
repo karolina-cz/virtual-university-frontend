@@ -7,10 +7,12 @@ export class Team {
   members: User[];
   resources: File[];
   events: TeamEvent[];
+  id: string;
 
-  constructor(title: string, description: string, members: User[], resources: File[], events: TeamEvent[]) {
+  constructor(title: string, description: string, id: string, members: User[], resources: File[], events: TeamEvent[]) {
     this.title = title;
     this.description = description;
+    this.id = id;
     this.members = members;
     this.resources = resources;
     this.events = events;

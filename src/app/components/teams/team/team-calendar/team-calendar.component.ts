@@ -14,7 +14,7 @@ export class TeamCalendarComponent implements OnInit {
       new User('kowalska', 'Anna', 'Kowalska', true),
       new User('nowakp', 'Piotr', 'Nowak', true),
       new User('kote', 'Estera', 'Kot', true)];
-    this.team = new Team('Projekt inżynierski', 'Projekt inżynierski wykorzystujący Spring i Angular', members, null, null);
+    this.team = new Team('Projekt inżynierski', 'Projekt inżynierski wykorzystujący Spring i Angular', '123', members, null, null);
   }
 
   ngOnInit(): void {

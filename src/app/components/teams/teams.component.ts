@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Router} from '@angular/router';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 import {Team} from '../../core/models/team/team.model';
 import {User} from '../../core/models/user.model';
 import {MatDialog} from '@angular/material/dialog';
@@ -8,29 +8,35 @@ import {AddTeamDialogComponent} from './add-team-dialog/add-team-dialog.componen
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {ToastrService} from 'ngx-toastr';
 import {UserAuthService} from '../../core/services/user-auth.service';
+import {TeamsService} from '../../core/services/teams.service';
+import {Observable, Subscription} from 'rxjs';
+import {finalize, map} from 'rxjs/operators';
+import {consoleTestResultHandler} from 'tslint/lib/test';
 
 @Component({
   selector: 'app-teams',
   templateUrl: './teams.component.html',
   styleUrls: ['./teams.component.css']
 })
-export class TeamsComponent implements OnInit {
-  teams: Team[] = [];
-  teamsCount = 5;
-  displayedFrom = 1;
-  displayedTo = 5;
+export class TeamsComponent implements OnInit, OnDestroy {
+  teams: Observable<any>;
+  teamsCount: number;
+  teamsPerPage = 5;
+  totalPagesCount;
+  paginationButtonsCount = 3;
+  displayedFrom: number;
+  displayedTo: number;
+  paginationButtonsValues: number[] = [1, 2, 3];
   isTeacher = false;
-  constructor(private router: Router, public dialog: MatDialog, private toastr: ToastrService, private authService: UserAuthService) {
+  page: number;
+  teamsSubscription: Subscription;
+  constructor(private router: Router, public dialog: MatDialog, private toastr: ToastrService, private authService: UserAuthService,
+              private route: ActivatedRoute, private teamsService: TeamsService) {
     this.isTeacher = !this.authService.currentUserValue.isStudent;
     const members = [
       new User('kowalska', 'Anna', 'Kowalska', true),
       new User('nowakp', 'Piotr', 'Nowak', true),
       new User('kote', 'Estera', 'Kot', true)];
-    this.teams.push(new Team('Projekt inżynierski', 'Projekt inżynierski wykorzystujący Spring i Angular', members, null, null));
-    this.teams.push(new Team('Aplikacje Webowe', 'fvevn veenr jc vi fher vebfhb fbvhebd dceidbrf uvhfuerh  erhugbcyue yuy hdgydgdf, hfgfyh, lsgtsbd, hgtaplb, bdgtard, ndhdh', members, null, null));
-    this.teams.push(new Team('Projekt z ochrony danych', 'fvevn veenr jc vi fher vebfhb fbvhebd dceidbrf uvhfuerh  erhugbcyue yuy hdgydgdf, hfgfyh, lsgtsbd, hgtaplb, bdgtard, ndhdh', members, null, null));
-    this.teams.push(new Team('Projekt z sieci komputerowych', 'fvevn veenr jc vi fher vebfhb fbvhebd dceidbrf uvhfuerh  erhugbcyue yuy hdgydgdf, hfgfyh, lsgtsbd, hgtaplb, bdgtard, ndhdh', members, null, null));
-    this.teams.push(new Team('Projekt zespołowy - CRM', 'fvevn veenr jc vi fher vebfhb fbvhebd dceidbrf uvhfuerh  erhugbcyue yuy hdgydgdf, hfgfyh, lsgtsbd, hgtaplb, bdgtard, ndhdh', members, null, null));
   }
 
   openDialog() {
@@ -47,17 +53,56 @@ export class TeamsComponent implements OnInit {
     });
   }
 
+  ngOnDestroy() {
+    this.teamsSubscription.unsubscribe();
+  }
+
   ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.page = +params.page;
+      if (isNaN(this.page) || this.page <= 0){
+        this.page = 1;
+      }
+
+      const from = (this.page - 1) * this.teamsPerPage + 1;
+      const to = (this.page * this.teamsPerPage);
+      this.teams = this.teamsService.getTeams(from, to).pipe(
+        map((data) => {
+          // @ts-ignore
+          this.teamsCount = data.totalCount;
+          // @ts-ignore
+          return data.teams;
+        })
+      );
+
+      this.teamsSubscription = this.teams.subscribe(() => {
+        this.updateValuesAfterDataReceived();
+      });
+    });
+  }
+
+  updateValuesAfterDataReceived(){
+    this.totalPagesCount = Math.ceil(this.teamsCount / this.teamsPerPage);
+    // @ts-ignore
+    if (this.page > this.totalPagesCount){
+      this.page = this.totalPagesCount;
+    }
+    for (let i = 0; i < 3; i ++){
+      this.paginationButtonsValues[i] = this.getPaginationButtonNumber(i + 1);
+    }
+    this.displayedFrom = (this.page - 1) * this.teamsPerPage + 1;
+    this.displayedTo = (this.page * this.teamsPerPage) > this.teamsCount ? this.teamsCount : (this.page * this.teamsPerPage);
   }
 
   onTeamSelected(index: number){
     this.router.navigate(['/teams/' + index]);
   }
 
-  onCancelNewTeamClicked(){
-  }
-
-  onSaveNewTeamClicked(){
+  getPaginationButtonNumber(index): number{
+    if (this.page % this.paginationButtonsCount === 0){
+      return (Math.floor(this.page / this.paginationButtonsCount) - 1) * this.paginationButtonsCount + index;
+    }
+    return Math.floor(this.page / this.paginationButtonsCount) * this.paginationButtonsCount + index;
   }
 
 }
