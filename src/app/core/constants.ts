@@ -1,4 +1,4 @@
 export class Constants {
-  public static LOGOUT_MESSAGE = '';
-  public static LOGOUT_STATUS_CODE = 500;
+  public static LOGOUT_MESSAGE = 'No access token cookie';
+  public static LOGOUT_STATUS_CODE = 401;
 }

@@ -2,11 +2,12 @@ import {Constants} from '../constants';
 
 export class ErrorUtils {
 
-  static checkSessionExpiration(error, authService){
-    // && error.message === Constants.LOGOUT_MESSAGE
-    if (error.status === Constants.LOGOUT_STATUS_CODE){
+  static isSessionExpired(error, authService, router): boolean{
+    if (error.status === Constants.LOGOUT_STATUS_CODE && error.error === Constants.LOGOUT_MESSAGE){
       authService.logout();
-      console.log('logout');
+      router.navigate(['/login'], {queryParams: {sessionExpired: true}});
+      return true;
     }
+    return false;
   }
 }

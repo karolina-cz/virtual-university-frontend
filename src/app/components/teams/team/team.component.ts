@@ -4,6 +4,7 @@ import {NgbCalendar, NgbDateStruct} from '@ng-bootstrap/ng-bootstrap';
 import {faFileAlt, faPlus, faQuestionCircle} from '@fortawesome/free-solid-svg-icons';
 import {User} from '../../../core/models/user.model';
 import {Team} from '../../../core/models/team/team.model';
+import {TeamsService} from '../../../core/services/teams.service';
 
 @Component({
   selector: 'app-team',
@@ -18,7 +19,7 @@ export class TeamComponent implements OnInit {
   fileName = 'Nie wybrano pliku';
   faPlus = faPlus;
   faQuestionCircle = faQuestionCircle;
-  constructor(private route: ActivatedRoute) {
+  constructor(private route: ActivatedRoute, private teamsService: TeamsService) {
     const members = [
       new User('kowalska', 'Anna', 'Kowalska', true),
       new User('nowakp', 'Piotr', 'Nowak', true),

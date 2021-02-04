@@ -54,6 +54,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.dialog.closeAll();
     this.teamsSubscription.unsubscribe();
   }
 
@@ -64,9 +65,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
         this.page = 1;
       }
 
-      const from = (this.page - 1) * this.teamsPerPage + 1;
-      const to = (this.page * this.teamsPerPage);
-      this.teams = this.teamsService.getTeams(from, to).pipe(
+      this.teams = this.teamsService.getTeams(this.page).pipe(
         map((data) => {
           // @ts-ignore
           this.teamsCount = data.totalCount;

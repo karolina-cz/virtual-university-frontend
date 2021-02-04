@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {UserAuthService} from '../../core/services/user-auth.service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -11,11 +11,16 @@ import {Router} from '@angular/router';
 export class LoginComponent implements OnInit {
   myForm: FormGroup;
   areCredentialsInvalid: boolean;
+  sessionExpired = false;
 
-  constructor(private formBuilder: FormBuilder, private authService: UserAuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private route: ActivatedRoute,
+              private authService: UserAuthService, private router: Router) {
   }
 
   ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.sessionExpired = params.sessionExpired === 'true';
+    });
     this.myForm = this.formBuilder.group({
       username: ['', [
         Validators.required

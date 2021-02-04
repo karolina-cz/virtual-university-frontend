@@ -7,17 +7,19 @@ import {Observable, of, throwError} from 'rxjs';
 import {catchError, map} from 'rxjs/operators';
 import {UserAuthService} from './user-auth.service';
 import {ErrorUtils} from './error-utils';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TeamsService {
   baseUrl = environment.baseUrl;
+  teams = [];
 
-  constructor(private httpClient: HttpClient, private authService: UserAuthService) {
+  constructor(private httpClient: HttpClient, private authService: UserAuthService, private router: Router) {
   }
 
-  addTeam(subject, description, teamMembers){
+  addTeam(subject, description, teamMembers) {
     const teacherId = this.authService.currentUserValue.username;
     const body = {
       subject,
@@ -27,26 +29,35 @@ export class TeamsService {
     };
     // @ts-ignore
     return this.httpClient.post<any>(this.baseUrl + 'collab/createTeam/', body, {withCredentials: true}).pipe(
-      catchError(() => of(''))
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of('error');
+      })
     );
   }
 
   getTeamInfo() {
   }
 
-  getTeams(from, to) {
-    const teams = [];
-    teams.push(new Team('Projekt inżynierski', 'Projekt inżynierski wykorzystujący Spring i Angular', '123', null, null, null));
-    teams.push(new Team('Aplikacje Webowe', 'fvevn veenr jc vi fher vebfhb fbvhebd dceidbrf uvhfuerh  erhugbcyue yuy hdgydgdf, hfgfyh, lsgtsbd, hgtaplb, bdgtard, ndhdh', '234', null, null, null));
-    teams.push(new Team('Projekt z ochrony danych', 'fvevn veenr jc vi fher vebfhb fbvhebd dceidbrf uvhfuerh  erhugbcyue yuy hdgydgdf, hfgfyh, lsgtsbd, hgtaplb, bdgtard, ndhdh', '567', null, null, null));
-    teams.push(new Team('Projekt z sieci komputerowych', 'fvevn veenr jc vi fher vebfhb fbvhebd dceidbrf uvhfuerh  erhugbcyue yuy hdgydgdf, hfgfyh, lsgtsbd, hgtaplb, bdgtard, ndhdh', '786', null, null, null));
-    teams.push(new Team('Projekt zespołowy - CRM', 'fvevn veenr jc vi fher vebfhb fbvhebd dceidbrf uvhfuerh  erhugbcyue yuy hdgydgdf, hfgfyh, lsgtsbd, hgtaplb, bdgtard, ndhdh', '857', null, null, null));
-    return new Observable((observer) => {
-      setTimeout(() => {
-        observer.next({teams, totalCount: 23});
-        observer.complete();
-      }, 2000);
-    });
+  getTeams(page: number) {
+    const login = this.authService.currentUserValue.username;
+    const body = {
+      page,
+      login
+    };
+    return this.httpClient.post<any>(this.baseUrl + 'collab/getTeams/', body, {withCredentials: true}).pipe(
+      map((data) => {
+        const teams: Team[] = [];
+        for (const team of data.teams){
+          teams.push(new Team(team.Subject__c, team.Description__c, team.Id, null, null, null));
+        }
+        return {teams, totalCount: data.size};
+      }),
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of({});
+      })
+    );
   }
 
   getUsersByPattern(pattern) {
@@ -54,7 +65,7 @@ export class TeamsService {
     const body = {
       pattern
     };
-    return this.httpClient.post<any>(this.baseUrl + 'collab/getMatchingNames/', body, { withCredentials: true}).pipe(
+    return this.httpClient.post<any>(this.baseUrl + 'collab/getMatchingNames/', body, {withCredentials: true}).pipe(
       map((data) => {
         const users = [];
         for (const item of data.users) {
@@ -65,7 +76,7 @@ export class TeamsService {
         return users;
       }),
       catchError((error) => {
-        // ErrorUtils.checkSessionExpiration(error, this.authService);
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of([]);
       })
     );

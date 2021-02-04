@@ -38,12 +38,13 @@ export class AddTeamDialogComponent implements OnInit {
     if (this.myForm.valid) {
       const members = this.memberAutocomplete.members.map(user => user.username);
       this.teamsService.addTeam(this.title.value, this.description.value, members).subscribe(
-        () => {
-          this.dialogRef.close(true);
-        },
-        () => {
-          this.dialogRef.close(false);
-      }
+        (data) => {
+          if (data === 'error'){
+            this.dialogRef.close(false);
+          } else{
+            this.dialogRef.close(true);
+          }
+        }
       );
     }
   }
