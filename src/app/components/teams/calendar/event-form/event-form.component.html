@@ -1,0 +1,74 @@
+<h2 *ngIf="formData.isEditingMode === false" mat-dialog-title>Dodaj wydarzenie</h2>
+<h2 *ngIf="formData.isEditingMode === true" mat-dialog-title>Edytuj wydarzenie</h2>
+<mat-dialog-content class="mat-typography">
+  <div class="modal-body">
+    <form [formGroup]="myForm" (ngSubmit)="onSubmitClicked()" id="eventForm" class="text-left">
+      <div class="form-group">
+        <label for="eventTitle"><strong>Nazwa wydarzenia</strong></label>
+        <input formControlName="title" class="form-control" type="text" id="eventTitle" name="eventTitle"/>
+        <div *ngIf="title.errors?.required && ((title.touched) || submitClicked)">
+          <small class="validation-message text-danger">To pole jest wymagane</small>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="eventDescription"><strong>Opis wydarzenia</strong></label>
+        <textarea formControlName="description" class="form-control" id="eventDescription" rows="5"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="addEventStartDate"><strong>Data rozpoczęcia</strong></label>
+        <input
+          formControlName="startDate"
+          id="addEventStartDate"
+          class="form-control"
+          type="text"
+          [locale]="'Polish'"
+          mwlFlatpickr
+          [altInput]="true"
+          [convertModelValue]="true"
+          [enableTime]="true"
+          [time24hr]="true"
+          [enable]="[enableAllDates]"
+          dateFormat="Y-m-dTH:i"
+          altFormat="F j, Y H:i"
+          placeholder="Not set"
+        />
+        <div *ngIf="startDate.errors?.required && ((startDate.touched) || submitClicked)">
+          <small class="validation-message text-danger">To pole jest wymagane</small>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="addEventEndDate"><strong>Data zakończenia</strong></label>
+        <input
+          formControlName="endDate"
+          id="addEventEndDate"
+          class="form-control"
+          type="text"
+          [locale]="'Polish'"
+          mwlFlatpickr
+          [altInput]="true"
+          [convertModelValue]="true"
+          [enableTime]="true"
+          [time24hr]="true"
+          [enable]="[enableAllDates]"
+          dateFormat="Y-m-dTH:i"
+          altFormat="F j, Y H:i"
+          placeholder="Not set"
+        />
+        <div *ngIf="endDate.errors?.required && ((endDate.touched) || submitClicked)">
+          <small class="validation-message text-danger">To pole jest wymagane</small>
+        </div>
+      </div>
+    </form>
+  </div>
+</mat-dialog-content>
+<hr/>
+<mat-dialog-actions align="end">
+  <div>
+    <button type="button" class="btn btn-secondary btn-sm mx-2" data-dismiss="modal" mat-dialog-close>
+      Anuluj
+    </button>
+    <button data-dismiss="modal" form="eventForm" type="submit" class="btn btn-primary btn-sm">
+      Zapisz
+    </button>
+  </div>
+</mat-dialog-actions>

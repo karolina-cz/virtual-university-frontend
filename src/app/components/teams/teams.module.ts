@@ -26,13 +26,14 @@ import {MatDialog, MatDialogModule, MatDialogRef} from '@angular/material/dialog
 import { AddTeamDialogComponent } from './add-team-dialog/add-team-dialog.component';
 import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { EventFormComponent } from './calendar/event-form/event-form.component';
 
 export function flatpickrFactory() {
   flatpickr.localize(Polish);
   return flatpickr;
 }
 @NgModule({
-  declarations: [TeamsComponent, TeamComponent, TeamMembersComponent, TeamCalendarComponent, TeamHeaderComponent, CalendarComponent, MembersAutocompleteComponent, AddTeamDialogComponent],
+  declarations: [TeamsComponent, TeamComponent, TeamMembersComponent, TeamCalendarComponent, TeamHeaderComponent, CalendarComponent, MembersAutocompleteComponent, AddTeamDialogComponent, EventFormComponent],
   imports: [
     CommonModule,
     TeamsRoutingModule,

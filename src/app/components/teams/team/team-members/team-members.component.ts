@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {AfterViewInit, Component, Input, OnInit, ViewChild} from '@angular/core';
 import {User} from '../../../../core/models/user.model';
 import {faPencilAlt, faTimes} from '@fortawesome/free-solid-svg-icons';
 import {faSearch} from '@fortawesome/free-solid-svg-icons';
@@ -8,13 +8,14 @@ import {debounceTime, finalize, map, startWith, switchMap, tap} from 'rxjs/opera
 import {Observable} from 'rxjs';
 import {TeamsService} from '../../../../core/services/teams.service';
 import {UserAuthService} from '../../../../core/services/user-auth.service';
+import {MembersAutocompleteComponent} from '../../members-autocomplete/members-autocomplete.component';
 
 @Component({
   selector: 'app-team-members',
   templateUrl: './team-members.component.html',
   styleUrls: ['./team-members.component.css']
 })
-export class TeamMembersComponent implements OnInit {
+export class TeamMembersComponent implements OnInit{
   myControl = new FormControl();
   faPencil = faPencilAlt;
   faTimes = faTimes;
@@ -36,6 +37,7 @@ export class TeamMembersComponent implements OnInit {
   isLoading = false;
 
   @Input() members: User[];
+  @Input() teamId;
 
   constructor(private teamsService: TeamsService, private authService: UserAuthService) {
     this.isCurrentUserTeacher = this.authService.currentUserValue.isStudent === false;
@@ -77,7 +79,11 @@ export class TeamMembersComponent implements OnInit {
         }
       }
     }
-    this.resetEditValues();
+    this.teamsService.addTeamMembers(this.teamId, this.addedMembers).subscribe(
+      () => {
+        this.resetEditValues();
+      }
+    );
   }
 
   resetEditValues() {

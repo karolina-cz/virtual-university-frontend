@@ -8,6 +8,8 @@ import {catchError, map} from 'rxjs/operators';
 import {UserAuthService} from './user-auth.service';
 import {ErrorUtils} from './error-utils';
 import {Router} from '@angular/router';
+import { CalendarEvent } from 'angular-calendar';
+import {Constants} from '../constants';
 
 @Injectable({
   providedIn: 'root'
@@ -36,7 +38,51 @@ export class TeamsService {
     );
   }
 
-  getTeamInfo() {
+  addTeamMembers(id: string, addedMembers: User[]){
+    const members = addedMembers.map(u => u.username);
+    const body = {
+      team_id: id,
+      team_members: members
+    };
+    return this.httpClient.post<any>(this.baseUrl + 'collab/addMember/', body, {withCredentials: true}).pipe(
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of(null);
+      })
+    );
+  }
+
+  getTeamInfo(id: string) {
+    const body = {
+      id
+    };
+    return this.httpClient.post<any>(this.baseUrl + 'collab/teamInfo/', body, {withCredentials: true}).pipe(
+      map((data) => {
+        const teamMembers = [];
+        for (const member of data.team_members){
+          teamMembers.push(new User(member.login, member.first_name, member.last_name, null));
+        }
+        return new Team(data.subject, data.description, data.id, teamMembers, null, null);
+      }),
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of(null);
+      })
+    );
+  }
+
+  getTeamEvents(from: string, to: string, teamId: string){
+    const body = {
+      team_id: teamId,
+      start_date: from,
+      end_date: to
+    };
+    return this.httpClient.post<any>(this.baseUrl + 'collab/getEvents/', body, {withCredentials: true}).pipe(
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of({});
+      })
+    );
   }
 
   getTeams(page: number) {
