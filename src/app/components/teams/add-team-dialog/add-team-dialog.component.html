@@ -14,7 +14,7 @@
         <textarea formControlName="description" class="form-control" id="formControlTextarea" rows="5"></textarea>
       </div>
     </form>
-    <app-members-autocomplete></app-members-autocomplete>
+    <app-members-autocomplete [isEditingModeOn]="true" [members]="[]" ></app-members-autocomplete>
   </div>
 </mat-dialog-content>
 <hr/>

@@ -24,12 +24,12 @@ export class MembersAutocompleteComponent implements OnInit{
   membersCopy: User[] = [];
   whitespaceStringRegex = new RegExp('\\S');
   isLoading = false;
-  members: User[] = [];
-  isEditingModeOn = true;
+  @Input() members: User[];
+  @Input() isEditingModeOn;
 
   constructor(private teamsService: TeamsService) {
     if (this.isEditingModeOn){
-      this.onEditClicked();
+      this.members.forEach(val => this.membersCopy.push(Object.assign({}, val)));
     }
   }
 
@@ -69,7 +69,7 @@ export class MembersAutocompleteComponent implements OnInit{
         }
       }
     }
-    this.resetEditValues();
+    // this.resetEditValues();
   }
 
   resetEditValues() {
@@ -96,7 +96,7 @@ export class MembersAutocompleteComponent implements OnInit{
   }
 
   onEditClicked() {
-    // this.isEditingModeOn = !this.isEditingModeOn;
+    this.isEditingModeOn = !this.isEditingModeOn;
     this.members.forEach(val => this.membersCopy.push(Object.assign({}, val)));
   }
 }

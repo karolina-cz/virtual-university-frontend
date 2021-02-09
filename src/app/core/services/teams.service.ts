@@ -52,6 +52,20 @@ export class TeamsService {
     );
   }
 
+  removeTeamMembers(id: string, removedMembers: User[]){
+    const members = removedMembers.map(u => u.username);
+    const body = {
+      team_id: id,
+      team_members: members
+    };
+    return this.httpClient.post<any>(this.baseUrl + 'collab/removeMember/', body, {withCredentials: true}).pipe(
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of(null);
+      })
+    );
+  }
+
   getTeamInfo(id: string) {
     const body = {
       id
