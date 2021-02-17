@@ -37,6 +37,7 @@
     "jquery": "^3.5.1",
     "moment-timezone": "^0.5.33",
     "ngx-toastr": "^13.2.0",
+    "rrule": "^2.6.8",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
     "zone.js": "~0.10.2"

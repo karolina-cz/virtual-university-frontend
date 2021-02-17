@@ -17,7 +17,7 @@
       <div class="form-group">
         <label for="addEventStartDate"><strong>Data rozpoczęcia</strong></label>
         <input
-          formControlName="startDate"
+          formControlName="startDateTime"
           id="addEventStartDate"
           class="form-control"
           type="text"
@@ -32,14 +32,14 @@
           altFormat="F j, Y H:i"
           placeholder="Not set"
         />
-        <div *ngIf="startDate.errors?.required && ((startDate.touched) || submitClicked)">
+        <div *ngIf="startDateTime.errors?.required && ((startDateTime.touched) || submitClicked)">
           <small class="validation-message text-danger">To pole jest wymagane</small>
         </div>
       </div>
       <div class="form-group">
         <label for="addEventEndDate"><strong>Data zakończenia</strong></label>
         <input
-          formControlName="endDate"
+          formControlName="endDateTime"
           id="addEventEndDate"
           class="form-control"
           type="text"
@@ -54,9 +54,23 @@
           altFormat="F j, Y H:i"
           placeholder="Not set"
         />
-        <div *ngIf="endDate.errors?.required && ((endDate.touched) || submitClicked)">
+        <div *ngIf="endDateTime.errors?.required && ((endDateTime.touched) || submitClicked)">
           <small class="validation-message text-danger">To pole jest wymagane</small>
         </div>
+      </div>
+      <div *ngIf="isRecurring.value === true" class="form-group">
+        <label for="freq"><strong>Częstotliwość powtarzania</strong></label>
+      <select id="freq" class="custom-select" >
+        <option value="Daily">Codziennie</option>
+        <option value="Weekly">Co tydzień, {{getWeekday()}} {{getEventHours()}}</option>
+        <option value="Monthly">Co miesiąc,{{getMonthDay()}} dnia miesiąca {{getEventHours()}}</option>
+      </select>
+      </div>
+      <div class="form-check">
+        <input formControlName="isRecurring" (click)="display()" class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
+        <label class="form-check-label" for="flexCheckDefault">
+          Wydarzenie powtarza się
+        </label>
       </div>
     </form>
   </div>

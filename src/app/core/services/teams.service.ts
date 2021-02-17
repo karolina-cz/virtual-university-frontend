@@ -87,6 +87,7 @@ export class TeamsService {
 
   getTeamEvents(from: string, to: string, teamId: string){
     const body = {
+      event_owner: 'team',
       team_id: teamId,
       start_date: from,
       end_date: to

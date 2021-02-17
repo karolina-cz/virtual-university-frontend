@@ -45,6 +45,7 @@ export class UserAuthService {
     // @ts-ignore
     return this.http.post<any>(this.url + 'auth/login/', body, { withCredentials: true}).pipe(
       map((data) => {
+        console.log(data);
         const isStudent = data.Type_of_Member__c === 'Student';
         this.currentUser = new User(username, data.First_Name__c, data.Lastname__c, isStudent);
         localStorage.setItem('user', JSON.stringify(this.currentUser));

@@ -4,7 +4,8 @@ import {
   ViewChild,
   TemplateRef,
 } from '@angular/core';
-import { ViewPeriod } from 'calendar-utils';
+import {ViewPeriod} from 'calendar-utils';
+import RRule from 'rrule';
 import {
   startOfDay,
   endOfDay,
@@ -16,7 +17,7 @@ import {
   addHours,
 } from 'date-fns';
 import {from, Subject} from 'rxjs';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarDayViewBeforeRenderEvent,
   CalendarEvent,
@@ -34,7 +35,7 @@ import {AddTeamDialogComponent} from '../add-team-dialog/add-team-dialog.compone
 import {ToastrService} from 'ngx-toastr';
 import {EventFormComponent} from './event-form/event-form.component';
 import {TeamEventsService} from '../../../core/services/team-events.service';
-import { faPlus } from '@fortawesome/free-solid-svg-icons';
+import {faPlus} from '@fortawesome/free-solid-svg-icons';
 
 
 const colors: any = {
@@ -52,9 +53,14 @@ const colors: any = {
   },
 };
 
+const weekdays = [RRule.SU, RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA];
+
 interface MyCalendarEvent extends CalendarEvent {
   description: string;
   meetingLink: string;
+  recurringEventStart;
+  recurringEventEnd;
+  frequency;
 }
 
 @Component({
@@ -74,7 +80,8 @@ export class CalendarComponent implements OnInit {
               private change: ChangeDetectorRef, private formBuilder: FormBuilder, public dialog: MatDialog,
               private toastr: ToastrService, private teamEventsService: TeamEventsService) {
   }
-  @ViewChild('modalContent', { static: true }) modalContent: TemplateRef<any>;
+
+  @ViewChild('modalContent', {static: true}) modalContent: TemplateRef<any>;
   locale = 'pl';
   viewPeriod: ViewPeriod;
 
@@ -93,14 +100,14 @@ export class CalendarComponent implements OnInit {
     {
       label: '<i class="fas fa-fw fa-pencil-alt"></i>',
       a11yLabel: 'Edit',
-      onClick: ({ event }: { event }): void => {
+      onClick: ({event}: { event }): void => {
         this.handleEvent('Edited', event);
       },
     },
     {
       label: '<i class="fas fa-fw fa-trash-alt"></i>',
       a11yLabel: 'Delete',
-      onClick: ({ event }: { event }): void => {
+      onClick: ({event}: { event }): void => {
         this.events = this.events.filter((iEvent) => iEvent !== event);
         this.handleEvent('Deleted', event);
       },
@@ -118,6 +125,10 @@ export class CalendarComponent implements OnInit {
     this.teamId = this.route.snapshot.params.id;
   }
 
+  isRecurringEvent(object: any): boolean {
+    return 'recurringEventStart' in object;
+  }
+
   getAllEvents(fromDate, toDate) {
     const fromDateString = fromDate.toISOString().substring(0, 19);
     const toDateString = toDate.toISOString().substring(0, 19);
@@ -125,11 +136,12 @@ export class CalendarComponent implements OnInit {
     this.teamsService.getTeamEvents(fromDateString, toDateString, this.teamId).subscribe(
       (data) => {
         const events: MyCalendarEvent[] = [];
-        for (const teamEvent of data.records){
+        for (const teamEvent of data.records) {
           const startDate = new Date(teamEvent.Start_Date__c);
           const endDate = new Date(teamEvent.End_Date__c);
           const color = teamEvent.Team__c === this.teamId ? colors.red : colors.blue;
-          events.push({
+          // TODO sprawdzic w jakiej formie to dostane
+          const event = {
             start: startDate,
             end: endDate,
             title: teamEvent.Subject__c,
@@ -137,8 +149,19 @@ export class CalendarComponent implements OnInit {
             id: teamEvent.Id,
             description: teamEvent.Description__c,
             meetingLink: teamEvent.Meeting_link__c,
-            actions: teamEvent.Team__c === this.teamId ? this.actions : null
-          });
+            actions: teamEvent.Team__c === this.teamId ? this.actions : null,
+            recurringEventStart: null,
+            recurringEventEnd: null,
+            frequency: null
+          };
+          if (teamEvent.Is_Repetitive__c !== true) {
+            events.push(event);
+          } else {
+            event.recurringEventStart = event.start;
+            event.recurringEventEnd = event.end;
+            event.frequency = teamEvent.Repeat_Frequency__c;
+            this.addRecurringEvent(event, events);
+          }
         }
         this.events = events;
         this.change.detectChanges();
@@ -146,17 +169,67 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-  openDialog(action, event){
+  addRecurringEvent(event, events) {
+    let rrule = {};
+    switch (event.frequency) {
+      case 'Daily':
+        rrule = {
+          freq: RRule.DAILY
+        };
+        break;
+      case 'Weekly':
+        rrule = {
+          freq: RRule.WEEKLY,
+          byweekday: [weekdays[event.recurringEventStart.getDay()]]
+        };
+        break;
+      case 'Monthly':
+        rrule = {
+          freq: RRule.MONTHLY,
+          bymonthday: event.recurringEventStart.getDate()
+        };
+        break;
+    }
+    let dtstart;
+    if (event.recurringEventStart > this.viewPeriod.start) {
+      dtstart = event.recurringEventStart;
+    } else {
+      dtstart = new Date(this.viewPeriod.start.getTime());
+      dtstart.setHours(event.recurringEventStart.getHours());
+      dtstart.setMinutes(event.recurringEventStart.getMinutes());
+    }
+    const until = event.recurringEventEnd < this.viewPeriod.end ? event.recurringEventEnd : this.viewPeriod.end;
+    const rule: RRule = new RRule({
+      ...rrule,
+      dtstart,
+      until,
+    });
+
+    rule.all().forEach((date) => {
+      const endDate = new Date(date.getTime());
+      endDate.setHours(event.recurringEventEnd.getHours());
+      endDate.setMinutes(event.recurringEventEnd.getMinutes());
+      events.push({
+        ...event,
+        start: date,
+        end: endDate
+      });
+    });
+  }
+
+  openDialog(action, event) {
     const isEditingMode = action === 'Edited';
     const dialogRef = this.dialog.open(EventFormComponent, {
       width: '600px',
-      data: {event,
-      isEditingMode}
+      data: {
+        event,
+        isEditingMode
+      }
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result !== '' && result !== undefined){
-        if (isEditingMode){
+      if (result !== '' && result !== undefined) {
+        if (isEditingMode) {
           this.eventEdited(event, result);
         } else {
           this.eventCreated(result);
@@ -165,17 +238,17 @@ export class CalendarComponent implements OnInit {
     });
   }
 
-  eventEdited(eventBeforeEdit, result){
+  eventEdited(eventBeforeEdit, result) {
     const eventChanges = {};
-    for (const [key, value] of Object.entries(eventBeforeEdit)){
-      if (result.hasOwnProperty(key) && value !== result[key]){
+    for (const [key, value] of Object.entries(eventBeforeEdit)) {
+      if (result.hasOwnProperty(key) && value !== result[key]) {
         eventChanges[key] = result[key];
       }
     }
-    if (Object.keys(eventChanges).length > 0){
+    if (Object.keys(eventChanges).length > 0) {
       this.teamEventsService.updateEvent(eventChanges, eventBeforeEdit.id).subscribe(
         (data) => {
-          if (data !== 'error'){
+          if (data !== 'error') {
             Object.assign(eventBeforeEdit, eventChanges);
             this.change.markForCheck();
           }
@@ -184,10 +257,11 @@ export class CalendarComponent implements OnInit {
     }
   }
 
-  eventCreated(newEvent){
+  eventCreated(newEvent) {
     this.teamEventsService.createEvent(newEvent, this.teamId).subscribe(
       (data) => {
-        if (data !== 'error'){
+        if (data !== 'error') {
+          // TODO if event not reccuring
           this.events.push({
             start: newEvent.start,
             end: newEvent.end,
@@ -196,7 +270,10 @@ export class CalendarComponent implements OnInit {
             id: data.id,
             description: newEvent.description,
             meetingLink: data.meetingLink,
-            actions: this.actions
+            actions: this.actions,
+            recurringEventEnd: null,
+            recurringEventStart: null,
+            frequency: null
           });
           this.events = [...this.events];
           this.change.markForCheck();
@@ -205,7 +282,7 @@ export class CalendarComponent implements OnInit {
     );
   }
 
-  dayClicked({ date, events }: { date: Date; events: CalendarEvent[] }): void {
+  dayClicked({date, events}: { date: Date; events: CalendarEvent[] }): void {
     if (isSameMonth(date, this.viewDate)) {
       if (
         (isSameDay(this.viewDate, date) && this.activeDayIsOpen === true) ||
@@ -220,7 +297,7 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEvent(action: string, event: MyCalendarEvent): void {
-    if (action === 'Edited'){
+    if (action === 'Edited') {
       this.openDialog(action, event);
     }
     // this.modalData = { event, action };
@@ -249,7 +326,9 @@ export class CalendarComponent implements OnInit {
       !this.viewPeriod ||
       !(this.viewPeriod?.start.valueOf() === viewRender.period.start.valueOf()) ||
       !(this.viewPeriod?.end.valueOf() === viewRender.period.end.valueOf())
-    ){
+    ) {
+      console.log('this.viewPeriod?.start ' + this.viewPeriod?.start + 'viewRender.period.start' + viewRender.period.start);
+      console.log('!(this.viewPeriod?.start.valueOf() === viewRender.period.start.valueOf())' + !(this.viewPeriod?.start.valueOf() === viewRender.period.start.valueOf()));
       this.viewPeriod = viewRender.period;
       this.getAllEvents(viewRender.period.start, viewRender.period.end);
     }
