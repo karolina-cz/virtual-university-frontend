@@ -1,6 +1,7 @@
 <h3>
   <button class=" btn btn-primary btn-sm float-right mt-3 " (click)="openDialog('Clicked', null)">
-   <fa-icon [icon]="faPlus"></fa-icon> Dodaj wydarzenie
+    <fa-icon [icon]="faPlus"></fa-icon>
+    Dodaj wydarzenie
   </button>
   <div class="clearfix"></div>
 </h3>
@@ -63,7 +64,7 @@
     </div>
   </div>
 </div>
-<br />
+<br/>
 <div [ngSwitch]="view">
   <mwl-calendar-month-view
     [locale]="locale"
@@ -100,79 +101,73 @@
 </div>
 
 
-<!--<ng-template #modalContent let-close="close">-->
-<!--  <div class="modal-header">-->
-<!--    <h5 class="modal-title">Dodaj wydarzenie</h5>-->
-<!--    <button type="button" class="close" (click)="close()">-->
-<!--      <span aria-hidden="true">&times;</span>-->
-<!--    </button>-->
-<!--  </div>-->
-<!--  <div class="modal-body">-->
-<!--    <form [formGroup]="addEventForm" (ngSubmit)="onAddEventClicked()" id="addEvent" class="text-left">-->
-<!--      <div class="form-group">-->
-<!--        <label for="eventTitle"><strong>Nazwa wydarzenia</strong></label>-->
-<!--        <input formControlName="title" class="form-control" type="text" id="eventTitle" name="eventTitle"/>-->
-<!--        <div *ngIf="addEventForm.get('title').errors?.required && ((addEventForm.get('title').touched) || submitAddEventClicked)">-->
-<!--          <small class="validation-message text-danger">To pole jest wymagane</small>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div class="form-group">-->
-<!--        <label for="eventDescription"><strong>Opis wydarzenia</strong></label>-->
-<!--        <textarea formControlName="description" class="form-control" id="eventDescription" rows="5"></textarea>-->
-<!--      </div>-->
-<!--      <div class="form-group">-->
-<!--        <label for="addEventStartDate"><strong>Data rozpoczęcia</strong></label>-->
-<!--        <input-->
-<!--          formControlName="startDate"-->
-<!--          id="addEventStartDate"-->
-<!--          class="form-control"-->
-<!--          type="text"-->
-<!--          [locale]="'Polish'"-->
-<!--          mwlFlatpickr-->
-<!--          [altInput]="true"-->
-<!--          [convertModelValue]="true"-->
-<!--          [enableTime]="true"-->
-<!--          [time24hr]="true"-->
-<!--          [enable]="[enableAllDates]"-->
-<!--          dateFormat="Y-m-dTH:i"-->
-<!--          altFormat="F j, Y H:i"-->
-<!--          placeholder="Not set"-->
-<!--        />-->
-<!--        <div *ngIf="addEventForm.get('startDate').errors?.required && ((addEventForm.get('startDate').touched) || submitAddEventClicked)">-->
-<!--          <small class="validation-message text-danger">To pole jest wymagane</small>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--      <div class="form-group">-->
-<!--        <label for="addEventEndDate"><strong>Data zakończenia</strong></label>-->
-<!--        <input-->
-<!--          formControlName="endDate"-->
-<!--          id="addEventEndDate"-->
-<!--          class="form-control"-->
-<!--          type="text"-->
-<!--          [locale]="'Polish'"-->
-<!--          mwlFlatpickr-->
-<!--          [altInput]="true"-->
-<!--          [convertModelValue]="true"-->
-<!--          [enableTime]="true"-->
-<!--          [time24hr]="true"-->
-<!--          [enable]="[enableAllDates]"-->
-<!--          dateFormat="Y-m-dTH:i"-->
-<!--          altFormat="F j, Y H:i"-->
-<!--          placeholder="Not set"-->
-<!--        />-->
-<!--        <div *ngIf="addEventForm.get('endDate').errors?.required && ((addEventForm.get('endDate').touched) || submitAddEventClicked)">-->
-<!--          <small class="validation-message text-danger">To pole jest wymagane</small>-->
-<!--        </div>-->
-<!--      </div>-->
-<!--    </form>-->
-<!--  </div>-->
-<!--  <div class="modal-footer">-->
-<!--    <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Anuluj</button>-->
-<!--    <button data-dismiss="modal" type="submit" form="addEvent"-->
-<!--            class="btn btn-primary btn-sm">Zapisz-->
-<!--    </button>-->
-<!--    <button type="button" class="btn btn-outline-secondary" (click)="close()">-->
-<!--      OK-->
-<!--    </button>-->
-<!--  </div>-->
-<!--</ng-template>-->
+<ng-template #modalContent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Informacje o wydarzeniu</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div *ngIf="modalData?.event.frequency === null">
+      <p class="font-weight-bold mb-0">Nazwa</p>
+      <p>{{modalData?.event.title}}</p>
+      <p class="font-weight-bold mb-0">Opis</p>
+      <p>{{modalData?.event.description}}</p>
+      <p class="font-weight-bold mb-0">Początek</p>
+      <p>{{modalData?.event.start | date:'d.MM.y, H:mm'}}</p>
+      <p class="font-weight-bold mb-0">Koniec</p>
+      <p>{{modalData?.event.end | date:'d.MM.y, H:mm'}}</p>
+      <a target="_blank" href="{{modalData?.event.meetingLink}}">Link do spotkania</a>
+    </div>
+    <div *ngIf="modalData?.event.frequency !== null">
+      <p class="font-weight-bold mb-0">Nazwa</p>
+      <p>{{modalData?.event.title}}</p>
+      <p class="font-weight-bold mb-0">Opis</p>
+      <p>{{modalData?.event.description}}</p>
+      <p class="font-weight-bold mb-0">Początek</p>
+      <p>{{modalData?.event.recurringEventStart | date:'d.MM.y, H:mm'}}</p>
+      <p class="font-weight-bold mb-0">Koniec</p>
+      <p>{{modalData?.event.recurringEventEnd | date:'d.MM.y, H:mm'}}</p>
+      <p class="font-weight-bold mb-0">Częstotoliwość powtarzania</p>
+      <div [ngSwitch]="modalData?.event.frequency">
+        <p *ngSwitchCase="'Daily'">
+          {{modalData?.event.frequency | eventFreq}},
+          {{modalData?.event.recurringEventStart | date:'H:mm'}} -
+          {{modalData?.event.recurringEventEnd | date:'H:mm'}}
+        </p>
+        <p *ngSwitchCase="'Weekly'">{{modalData?.event.frequency | eventFreq}},
+          {{modalData?.event.recurringEventStart | dayofweek}}
+          {{modalData?.event.recurringEventStart | date:'H:mm'}} -
+          {{modalData?.event.recurringEventEnd | date:'H:mm'}}</p>
+        <p *ngSwitchCase="'Monthly'">{{modalData?.event.frequency | eventFreq}},
+          {{modalData?.event.recurringEventStart.getDate()}}
+          dnia miesiąca,
+          {{modalData?.event.recurringEventStart | date:'H:mm'}} -
+          {{modalData?.event.recurringEventEnd | date:'H:mm'}}
+        </p>
+      </div>
+      <a target="_blank" href="{{modalData?.event.meetingLink}}">Link do spotkania</a>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-outline-secondary" (click)="close()">
+      OK
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #modalDeleteEvent let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Czy na pewno chcesz usunąć to wydarzenie?</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Anuluj</button>
+    <button (click)="onDeleteEventClicked(); close()" type="button"
+            class="btn btn-danger">Usuń
+    </button>
+  </div>
+</ng-template>

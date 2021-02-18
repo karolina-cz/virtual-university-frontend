@@ -16,11 +16,24 @@ export class EventFormComponent implements OnInit {
 
   ngOnInit(): void {
     const defaultEnd = new Date();
-    const isRecurring = this.formData.event?.frequency !== undefined && this.formData.event?.frequency !== null;
-    const start = this.formData.event?.start === undefined ? new Date() : this.formData.event.start;
     defaultEnd.setHours(defaultEnd.getHours() + 2);
-    const end = this.formData.event?.end === undefined ? defaultEnd : this.formData.event.end;
-
+    const isRecurring = this.formData.event?.frequency !== undefined && this.formData.event?.frequency !== null;
+    let start;
+    let end;
+    let freq;
+    if (!this.formData.isEditingMode){
+      start = new Date();
+      end = defaultEnd;
+      freq = 'Daily';
+    } else if (isRecurring){
+      start = this.formData.event.recurringEventStart;
+      end = this.formData.event.recurringEventEnd;
+      freq = this.formData.event.frequency;
+    } else {
+      start = this.formData.event.start;
+      end = this.formData.event.end;
+      freq = 'Daily';
+    }
     this.myForm = this.formBuilder.group({
       title: [this.formData.event?.title, [
         Validators.required
@@ -34,16 +47,12 @@ export class EventFormComponent implements OnInit {
       ]],
       isRecurring: [isRecurring],
       endTime: [],
-      frequency: [this.formData.event?.frequency]
+      frequency: [freq]
     });
   }
 
   get title() {
     return this.myForm.get('title');
-  }
-
-  display() {
-    console.log(this.myForm.get('endTime').value);
   }
 
   get description() {
@@ -92,6 +101,7 @@ export class EventFormComponent implements OnInit {
   onSubmitClicked(){
     this.submitClicked = true;
     if (this.myForm.valid){
+      console.log(this.frequency);
       const frequency = this.isRecurring.value ? this.frequency.value : null;
       this.dialogRef.close({
           title: this.title.value,

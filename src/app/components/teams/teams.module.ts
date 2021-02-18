@@ -27,13 +27,27 @@ import { AddTeamDialogComponent } from './add-team-dialog/add-team-dialog.compon
 import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { EventFormComponent } from './calendar/event-form/event-form.component';
+import {EventFreqPipe} from '../../core/pipes/event-freq.pipe';
+import {NavbarToggleDirective} from '../../directives/navbar-toggle.directive';
+import {DayofweekPipe} from '../../core/pipes/dayofweek.pipe';
 
 export function flatpickrFactory() {
   flatpickr.localize(Polish);
   return flatpickr;
 }
 @NgModule({
-  declarations: [TeamsComponent, TeamComponent, TeamMembersComponent, TeamCalendarComponent, TeamHeaderComponent, CalendarComponent, MembersAutocompleteComponent, AddTeamDialogComponent, EventFormComponent],
+  declarations: [
+    TeamsComponent,
+    TeamComponent,
+    TeamMembersComponent,
+    TeamCalendarComponent,
+    TeamHeaderComponent,
+    CalendarComponent,
+    MembersAutocompleteComponent,
+    AddTeamDialogComponent,
+    EventFormComponent,
+    EventFreqPipe,
+    DayofweekPipe],
   imports: [
     CommonModule,
     TeamsRoutingModule,

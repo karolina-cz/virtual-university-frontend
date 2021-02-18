@@ -19,6 +19,8 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {registerLocaleData} from '@angular/common';
 import localePl from '@angular/common/locales/pl';
+import { EventFreqPipe } from './core/pipes/event-freq.pipe';
+import { DayofweekPipe } from './core/pipes/dayofweek.pipe';
 
 registerLocaleData(localePl);
 
@@ -43,9 +45,8 @@ registerLocaleData(localePl);
     TeamsModule,
     ProfileModule,
     BrowserAnimationsModule,
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})
   ],
-  exports: [],
   providers: [],
   bootstrap: [AppComponent]
 })
