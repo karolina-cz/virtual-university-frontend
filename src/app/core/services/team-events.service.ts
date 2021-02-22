@@ -23,6 +23,22 @@ export class TeamEventsService {
   constructor(private httpClient: HttpClient, private authService: UserAuthService, private router: Router) {
   }
 
+  getUserEvents(from: string, to: string, teamId: string, user: string){
+    const body = {
+      event_owner: 'user',
+      username: user,
+      team_id: teamId,
+      start_date: from,
+      end_date: to
+    };
+    return this.httpClient.post<any>(this.baseUrl + 'collab/getEvents/', body, {withCredentials: true}).pipe(
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of(error);
+      })
+    );
+  }
+
   updateEvent(eventChanges, eventId) {
     const body = {
       event_info: {
@@ -41,7 +57,6 @@ export class TeamEventsService {
         body.event_info[this.eventModelToSF[key]] = value;
       }
     }
-    console.log(body);
     // @ts-ignore
     return this.httpClient.post<any>(this.baseUrl + 'collab/editEvent/', body, {responseType: 'text', withCredentials: true}).pipe(
       catchError((error) => {
@@ -58,7 +73,6 @@ export class TeamEventsService {
     // @ts-ignore
     return this.httpClient.post<any>(this.baseUrl + 'collab/removeEvent/', body, {responseType: 'text', withCredentials: true}).pipe(
       catchError((error) => {
-        console.log('error');
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of('error');
       })

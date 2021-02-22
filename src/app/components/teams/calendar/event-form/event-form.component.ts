@@ -101,7 +101,6 @@ export class EventFormComponent implements OnInit {
   onSubmitClicked(){
     this.submitClicked = true;
     if (this.myForm.valid){
-      console.log(this.frequency);
       const frequency = this.isRecurring.value ? this.frequency.value : null;
       this.dialogRef.close({
           title: this.title.value,

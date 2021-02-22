@@ -30,6 +30,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   isTeacher = false;
   page: number;
   teamsSubscription: Subscription;
+
   constructor(private router: Router, public dialog: MatDialog, private toastr: ToastrService, private authService: UserAuthService,
               private route: ActivatedRoute, private teamsService: TeamsService) {
     this.isTeacher = !this.authService.currentUserValue.isStudent;
@@ -45,9 +46,9 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === true){
+      if (result === true) {
         this.toastr.success('Zespół został stworzony', '', {timeOut: 2000});
-      } else if (result === false){
+      } else if (result === false) {
         this.toastr.error('Błąd podczas tworzenia zespołu', '', {timeOut: 2000});
       }
     });
@@ -61,7 +62,7 @@ export class TeamsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
       this.page = +params.page;
-      if (isNaN(this.page) || this.page <= 0){
+      if (isNaN(this.page) || this.page <= 0) {
         this.page = 1;
       }
 
@@ -80,25 +81,27 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateValuesAfterDataReceived(){
+  updateValuesAfterDataReceived() {
     this.totalPagesCount = Math.ceil(this.teamsCount / this.teamsPerPage);
     // @ts-ignore
-    if (this.page > this.totalPagesCount){
+    if (this.page > this.totalPagesCount) {
       this.page = this.totalPagesCount;
     }
-    for (let i = 0; i < 3; i ++){
-      this.paginationButtonsValues[i] = this.getPaginationButtonNumber(i + 1);
+    if (this.teamsCount > 0) {
+      for (let i = 0; i < 3; i++) {
+        this.paginationButtonsValues[i] = this.getPaginationButtonNumber(i + 1);
+      }
+      this.displayedFrom = (this.page - 1) * this.teamsPerPage + 1;
+      this.displayedTo = (this.page * this.teamsPerPage) > this.teamsCount ? this.teamsCount : (this.page * this.teamsPerPage);
     }
-    this.displayedFrom = (this.page - 1) * this.teamsPerPage + 1;
-    this.displayedTo = (this.page * this.teamsPerPage) > this.teamsCount ? this.teamsCount : (this.page * this.teamsPerPage);
   }
 
-  onTeamSelected(index: number){
+  onTeamSelected(index: number) {
     this.router.navigate(['/teams/' + index]);
   }
 
-  getPaginationButtonNumber(index): number{
-    if (this.page % this.paginationButtonsCount === 0){
+  getPaginationButtonNumber(index): number {
+    if (this.page % this.paginationButtonsCount === 0) {
       return (Math.floor(this.page / this.paginationButtonsCount) - 1) * this.paginationButtonsCount + index;
     }
     return Math.floor(this.page / this.paginationButtonsCount) * this.paginationButtonsCount + index;
