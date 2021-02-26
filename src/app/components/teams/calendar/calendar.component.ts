@@ -247,6 +247,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
           }
         })
       ).subscribe(d => {
+        console.log(this.membersEvents);
         resolve();
       });
     });
@@ -455,17 +456,14 @@ export class CalendarComponent implements OnInit, OnDestroy {
       !(this.viewPeriod?.start.valueOf() === viewRender.period.start.valueOf()) ||
       !(this.viewPeriod?.end.valueOf() === viewRender.period.end.valueOf())
     ) {
-      if (this.currentTeamValue !== null) {
         Promise.all([
           this.getAllEvents(viewRender.period.start, viewRender.period.end),
           this.getMembersEvents(viewRender.period.start, viewRender.period.end)
         ]).then(() => {
+          console.log('aa');
           this.onChangeMembersList(this.form.value.members);
         });
-      } else {
-        this.getAllEvents(viewRender.period.start, viewRender.period.end);
-      }
-      this.viewPeriod = viewRender.period;
+        this.viewPeriod = viewRender.period;
     }
   }
 }
