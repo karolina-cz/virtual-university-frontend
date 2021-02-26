@@ -14,8 +14,10 @@
         <label for="eventDescription"><strong>Opis wydarzenia</strong></label>
         <textarea formControlName="description" class="form-control" id="eventDescription" rows="5"></textarea>
       </div>
+
+      <div *ngIf="!isRecurring.value">
       <div class="form-group">
-        <label for="addEventStartDate"><strong>Data rozpoczęcia</strong></label>
+        <label for="addEventStartDate"><strong>Data i godzina rozpoczęcia</strong></label>
         <input
           formControlName="startDateTime"
           id="addEventStartDate"
@@ -37,7 +39,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="addEventEndDate"><strong>Data zakończenia</strong></label>
+        <label for="addEventEndDate"><strong>Data i godzina zakończenia</strong></label>
         <input
           formControlName="endDateTime"
           id="addEventEndDate"
@@ -58,12 +60,97 @@
           <small class="validation-message text-danger">To pole jest wymagane</small>
         </div>
       </div>
+      </div>
+
+      <div *ngIf="isRecurring.value">
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label ><strong>Data rozpoczęcia</strong></label>
+            <input
+              formControlName="startDateRecurring"
+              class="form-control"
+              type="text"
+              [locale]="'Polish'"
+              mwlFlatpickr
+              [altInput]="true"
+              [convertModelValue]="true"
+              [enable]="[enableAllDates]"
+              dateFormat="Y-m-d"
+              placeholder="Not set"
+            />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label ><strong>Data zakończenia</strong></label>
+            <input
+              formControlName="endDateRecurring"
+              class="form-control"
+              type="text"
+              [locale]="'Polish'"
+              mwlFlatpickr
+              [altInput]="true"
+              [convertModelValue]="true"
+              [enable]="[enableAllDates]"
+              dateFormat="Y-m-d"
+              placeholder="Not set"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <div class="form-group">
+            <label ><strong>Godzina rozpoczęcia</strong></label>
+            <input
+              formControlName="startTimeRecurring"
+              class="form-control"
+              type="text"
+              mwlFlatpickr
+              [convertModelValue]="true"
+              [noCalendar]="true"
+              [enableTime]="true"
+              [time24hr]="true"
+              [defaultHour]="startDateTime.value.getHours()"
+              [defaultMinute]="startDateTime.value.getMinutes()"
+              dateFormat="H:i"
+              placeholder="{{startDateTime.value | date:'H:mm'}}"
+            />
+          </div>
+        </div>
+        <div class="col">
+          <div class="form-group">
+            <label ><strong>Godzina zakończenia</strong></label>
+            <input
+              formControlName="endTimeRecurring"
+              class="form-control"
+              type="text"
+              mwlFlatpickr
+              [convertModelValue]="true"
+              [noCalendar]="true"
+              [enableTime]="true"
+              [time24hr]="true"
+              [defaultHour]="endDateTime.value.getHours()"
+              [defaultMinute]="endDateTime.value.getMinutes()"
+              dateFormat="H:i"
+              placeholder="{{endDateTime.value | date:'H:mm'}}"
+            />
+          </div>
+        </div>
+      </div>
+      </div>
+
       <div *ngIf="isRecurring.value === true" class="form-group">
         <label for="freq"><strong>Częstotliwość powtarzania</strong></label>
         <select formControlName="frequency" id="freq" class="custom-select">
           <option value="Daily">Codziennie</option>
-          <option value="Weekly">Co tydzień, {{getWeekday()}} {{getEventHours()}}</option>
-          <option value="Monthly">Co miesiąc,{{getMonthDay()}} dnia miesiąca {{getEventHours()}}</option>
+          <option value="Weekly">Co tydzień, {{getWeekday()}}
+            {{startTimeRecurring.value | date:'H:mm'}} -
+            {{endTimeRecurring.value | date:'H:mm'}}</option>
+          <option value="Monthly">Co miesiąc, {{startDateRecurring.value.getDate()}} dnia miesiąca
+            {{startTimeRecurring.value | date:'H:mm'}} -
+            {{endTimeRecurring.value | date:'H:mm'}}</option>
         </select>
       </div>
       <div class="form-check">

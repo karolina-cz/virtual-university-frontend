@@ -23,10 +23,9 @@ export class TeamEventsService {
   constructor(private httpClient: HttpClient, private authService: UserAuthService, private router: Router) {
   }
 
-  getUserEvents(from: string, to: string, teamId: string, user: string){
+  getUsersEvents(from: string, to: string, teamId: string){
     const body = {
       event_owner: 'user',
-      username: user,
       team_id: teamId,
       start_date: from,
       end_date: to

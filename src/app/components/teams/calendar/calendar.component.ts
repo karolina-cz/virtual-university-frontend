@@ -74,15 +74,18 @@ interface MyCalendarEvent extends CalendarEvent {
 })
 export class CalendarComponent implements OnInit, OnDestroy {
   private currentTeam = new BehaviorSubject<Team>(null);
+
   @Input() set team(value: Team) {
-    if (value.title !== null){
+    if (value.title !== null) {
       this.currentTeam.next(value);
     }
   }
+
   teamId: string;
   submitAddEventClicked = false;
   teamSubscription: Subscription;
   form: FormGroup;
+
   constructor(private modal: NgbModal, private route: ActivatedRoute, private teamsService: TeamsService,
               private change: ChangeDetectorRef, private formBuilder: FormBuilder, public dialog: MatDialog,
               private toastr: ToastrService, private teamEventsService: TeamEventsService) {
@@ -134,8 +137,8 @@ export class CalendarComponent implements OnInit, OnDestroy {
     flatpickrFactory();
     this.teamId = this.route.snapshot.params.id;
     this.teamSubscription = this.currentTeam.subscribe(x => {
-      if (x !== null){
-        this.getMembersEvents(this.viewPeriod.start, this.viewPeriod.end).then(() => this.addCheckboxes());
+      if (x !== null) {
+        this.addCheckboxes();
       }
     });
     this.form.valueChanges.subscribe(data => {
@@ -165,52 +168,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   getAllEvents(fromDate, toDate) {
-    const fromDateString = fromDate.toISOString().substring(0, 19);
-    const toDateString = toDate.toISOString().substring(0, 19);
-
-    this.teamsService.getTeamEvents(fromDateString, toDateString, this.teamId).subscribe(
-      (data) => {
-        const events: MyCalendarEvent[] = [];
-        for (const teamEvent of data.records) {
-          const startDate = new Date(teamEvent.Start_Date__c);
-          const endDate = new Date(teamEvent.End_Date__c);
-          const color = teamEvent.Team__c === this.teamId ? colors.red : colors.blue;
-          const event = {
-            start: startDate,
-            end: endDate,
-            title: teamEvent.Subject__c,
-            color,
-            id: teamEvent.Id,
-            description: teamEvent.Description__c,
-            meetingLink: teamEvent.Meeting_Link__c,
-            actions: teamEvent.Team__c === this.teamId ? this.actions : null,
-            recurringEventStart: null,
-            recurringEventEnd: null,
-            frequency: null,
-            owner: 'team'
-          };
-          if (teamEvent.Is_Repetitive__c !== true) {
-            events.push(event);
-          } else {
-            event.recurringEventStart = event.start;
-            event.recurringEventEnd = event.end;
-            event.frequency = teamEvent.Repeat_Frequency__c;
-            this.addRecurringEvent(event, events);
-          }
-        }
-        this.events = events;
-        this.change.detectChanges();
-      }
-    );
-  }
-
-  getMembersEvents(fromDate, toDate){
     return new Promise(resolve => {
       const fromDateString = fromDate.toISOString().substring(0, 19);
       const toDateString = toDate.toISOString().substring(0, 19);
-      forkJoin(this.currentTeamValue.members.map(member => {
-        return this.teamEventsService.getUserEvents(fromDateString, toDateString, this.teamId, member.username).pipe(
-          map(data => {
+      this.teamsService.getTeamEvents(fromDateString, toDateString, this.teamId).pipe(
+        map(
+          (data) => {
             const events: MyCalendarEvent[] = [];
             for (const teamEvent of data.records) {
               const startDate = new Date(teamEvent.Start_Date__c);
@@ -228,38 +191,81 @@ export class CalendarComponent implements OnInit, OnDestroy {
                 recurringEventStart: null,
                 recurringEventEnd: null,
                 frequency: null,
-                owner: 'user'
+                owner: 'team'
               };
-              if (teamEvent.Is_Repetitive__c === true) {
+              if (teamEvent.Is_Repetitive__c !== true) {
+                events.push(event);
+              } else {
                 event.recurringEventStart = event.start;
                 event.recurringEventEnd = event.end;
                 event.frequency = teamEvent.Repeat_Frequency__c;
+                this.addRecurringEvent(event, events);
               }
-              events.push(event);
-              this.membersEvents[member.username] = events;
             }
-          })
-        );
-      })).subscribe(d => {
+            this.events = events;
+            this.change.detectChanges();
+          }
+        )).subscribe(() => resolve());
+    });
+  }
+
+  getMembersEvents(fromDate, toDate) {
+    return new Promise(resolve => {
+      const fromDateString = fromDate.toISOString().substring(0, 19);
+      const toDateString = toDate.toISOString().substring(0, 19);
+      return this.teamEventsService.getUsersEvents(fromDateString, toDateString, this.teamId).pipe(
+        map(data => {
+          for (const [key, value] of Object.entries(data.records)) {
+            const events: MyCalendarEvent[] = [];
+            // @ts-ignore
+            for (const teamEvent of value){
+                const startDate = new Date(teamEvent.Start_Date__c);
+                const endDate = new Date(teamEvent.End_Date__c);
+                const color = colors.blue;
+                const event = {
+                  start: startDate,
+                  end: endDate,
+                  title: teamEvent.Subject__c,
+                  color,
+                  id: teamEvent.Id,
+                  description: teamEvent.Description__c,
+                  meetingLink: teamEvent.Meeting_Link__c,
+                  actions: teamEvent.Team__c === this.teamId ? this.actions : null,
+                  recurringEventStart: null,
+                  recurringEventEnd: null,
+                  frequency: null,
+                  owner: 'user'
+                };
+                if (teamEvent.Is_Repetitive__c === true) {
+                  event.recurringEventStart = event.start;
+                  event.recurringEventEnd = event.end;
+                  event.frequency = teamEvent.Repeat_Frequency__c;
+                }
+                events.push(event);
+                this.membersEvents[key] = events;
+            }
+          }
+        })
+      ).subscribe(d => {
         resolve();
       });
     });
   }
 
-  onChangeMembersList(members){
+  onChangeMembersList(members) {
     this.events = this.events.filter(e => e.owner !== 'user');
     // tslint:disable-next-line:forin
     let eventsToAdd = [];
     // tslint:disable-next-line:forin
-    for (const i in members){
+    for (const i in members) {
       const username = this.currentTeamValue.members[i].username;
-      if (members[i] === true && this.membersEvents[username] !== undefined){
+      if (members[i] === true && this.membersEvents[username] !== undefined) {
         eventsToAdd = this.mergeWithoutDuplicates(eventsToAdd, this.membersEvents[username]);
       }
     }
-    if (eventsToAdd.length !== 0){
-      for (const event of eventsToAdd){
-        if (event.frequency === null){
+    if (eventsToAdd.length !== 0) {
+      for (const event of eventsToAdd) {
+        if (event.frequency === null) {
           this.events.push(event);
         } else {
           this.addRecurringEvent(event, this.events);
@@ -270,7 +276,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     }
   }
 
-  mergeWithoutDuplicates(initialData, newData){
+  mergeWithoutDuplicates(initialData, newData) {
     const ids = new Set(initialData.map(d => d.id));
     return [...initialData, ...newData.filter(d => !ids.has(d.id))];
   }
@@ -380,7 +386,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
             frequency: null,
             owner: 'team'
           };
-          if (newEvent.frequency === null){
+          if (newEvent.frequency === null) {
             this.events.push(event);
           } else {
             event.recurringEventEnd = event.end;
@@ -425,8 +431,9 @@ export class CalendarComponent implements OnInit, OnDestroy {
   onDeleteEventClicked() {
     this.teamEventsService.deleteEvent(this.modalData.event.id).subscribe(
       (data) => {
-      this.events = this.events.filter((event) => event.id !== this.modalData.event.id);
-    });
+        this.events = this.events.filter((event) => event.id !== this.modalData.event.id);
+        this.change.markForCheck();
+      });
   }
 
   setView(view: CalendarView) {
@@ -448,13 +455,17 @@ export class CalendarComponent implements OnInit, OnDestroy {
       !(this.viewPeriod?.start.valueOf() === viewRender.period.start.valueOf()) ||
       !(this.viewPeriod?.end.valueOf() === viewRender.period.end.valueOf())
     ) {
-      if (this.currentTeamValue !== null){
-        this.getMembersEvents(viewRender.period.start, viewRender.period.end).then(() => {
+      if (this.currentTeamValue !== null) {
+        Promise.all([
+          this.getAllEvents(viewRender.period.start, viewRender.period.end),
+          this.getMembersEvents(viewRender.period.start, viewRender.period.end)
+        ]).then(() => {
           this.onChangeMembersList(this.form.value.members);
         });
+      } else {
+        this.getAllEvents(viewRender.period.start, viewRender.period.end);
       }
       this.viewPeriod = viewRender.period;
-      this.getAllEvents(viewRender.period.start, viewRender.period.end);
     }
   }
 }

@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {JSDocTagName} from '@angular/compiler/src/output/output_ast';
 
 @Component({
   selector: 'app-event-form',
@@ -46,7 +47,10 @@ export class EventFormComponent implements OnInit {
         Validators.required
       ]],
       isRecurring: [isRecurring],
-      endTime: [],
+      startDateRecurring: [start],
+      endDateRecurring: [end],
+      startTimeRecurring: [start],
+      endTimeRecurring: [end],
       frequency: [freq]
     });
   }
@@ -63,23 +67,24 @@ export class EventFormComponent implements OnInit {
     return this.myForm.get('endDateTime');
   }
 
+  get startDateRecurring() {
+    return this.myForm.get('startDateRecurring');
+  }
+
+  get endDateRecurring() {
+    return this.myForm.get('endDateRecurring');
+  }
+
+  get startTimeRecurring() {
+    return this.myForm.get('startTimeRecurring');
+  }
+
+  get endTimeRecurring() {
+    return this.myForm.get('endTimeRecurring');
+  }
+
   getWeekday(){
-    return this.weekdays[this.startDateTime.value?.getDay()];
-  }
-
-  getEventHours(){
-    return '' + this.getTimeFormat(this.startDateTime.value) + ' - ' + this.getTimeFormat(this.endDateTime.value);
-  }
-
-  getTimeFormat(date){
-    if (date === null) { return ''; }
-    const hours = date.getHours().toString().length === 1 ? '0' + date.getHours() : date.getHours();
-    const minutes = date.getMinutes().toString().length === 1 ? '0' + date.getMinutes() : date.getMinutes();
-    return hours + ':' + minutes;
-  }
-
-  getMonthDay(){
-    return this.startDateTime.value?.getDate();
+    return this.weekdays[this.startDateRecurring.value?.getDay()];
   }
 
   get startDateTime() {
@@ -101,12 +106,23 @@ export class EventFormComponent implements OnInit {
   onSubmitClicked(){
     this.submitClicked = true;
     if (this.myForm.valid){
-      const frequency = this.isRecurring.value ? this.frequency.value : null;
+      let frequency = null;
+      let start = this.startDateTime.value;
+      let end = this.endDateTime.value;
+      if (this.isRecurring.value){
+        frequency = this.frequency.value;
+        start = this.startDateRecurring.value;
+        start.setHours(this.startTimeRecurring.value.getHours(),
+          this.startTimeRecurring.value.getMinutes());
+        end = this.endDateRecurring.value;
+        end.setHours(this.endTimeRecurring.value.getHours(),
+          this.endTimeRecurring.value.getMinutes());
+      }
       this.dialogRef.close({
           title: this.title.value,
           description: this.description.value,
-          end: this.endDateTime.value,
-          start: this.startDateTime.value,
+          end,
+          start,
           frequency
         });
     }
