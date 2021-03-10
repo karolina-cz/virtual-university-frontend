@@ -60,4 +60,14 @@ export class UserAuthService {
     // @ts-ignore
     this.http.get<any>(this.url + 'auth/logout', {responseType: 'text', withCredentials: true}).subscribe();
   }
+
+  forgotPassword(username) {
+    const body = {
+      login: username
+    };
+    // @ts-ignore
+    return this.http.post<any>(this.url + 'auth/generateCode/', body, {responseType: 'text', withCredentials: true}).pipe(
+      catchError(() => throwError('error'))
+    );
+  }
 }

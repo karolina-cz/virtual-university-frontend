@@ -1,0 +1,42 @@
+<h3 class="text-center mb-4">Wyszukaj wykładowcę</h3>
+<div class="row justify-content-center">
+  <div class="w-50" >
+    <form id="search-form" class="text-center" #f="ngForm" (ngSubmit)="onSearchTeacher(f)">
+      <div class="input-group" >
+        <input type="text"
+               name="teacher"
+               ngModel
+               class="form-control border-0 small input-large search-query"
+               placeholder="Wpisz Imię i nazwisko..."/>
+        <div class="input-group-append">
+          <button class="btn btn-primary py-0" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="isDataLoaded && teachers.length !==0">
+    <table class="table my-5" id="dataTable">
+      <thead>
+      <tr>
+        <th>Imię</th>
+        <th>Nazwisko</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr style="cursor:pointer" *ngFor="let item of teachers; let i = index" >
+        <td>{{item.firstname}}</td>
+        <td style="text-overflow: ellipsis;">
+          <p
+            style="text-overflow: ellipsis;">
+            {{item.lastname}}</p>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    </div>
+    <div class="text-center my-5" *ngIf="isDataLoaded && teachers.length === 0">
+      Nie znaleziono żadnych wyników
+    </div>
+  </div>
+</div>

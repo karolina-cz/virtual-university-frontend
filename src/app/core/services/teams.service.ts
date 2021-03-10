@@ -142,4 +142,60 @@ export class TeamsService {
       })
     );
   }
+
+  addAttachment(filename, fileBase64, teamId){
+    const body = {
+      Name: filename,
+      Body: fileBase64,
+      parentId: teamId
+    };
+    // @ts-ignore
+    return this.httpClient.post<any>(this.baseUrl + 'collab/addAttachment/', body, {withCredentials: true}).pipe (
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of('error');
+      })
+    );
+  }
+
+  getAttachment(attachmentId){
+    const body = {
+      attachment_id: attachmentId
+    };
+    // @ts-ignore
+    return this.httpClient.post<any>(this.baseUrl + 'collab/getAttachment/', body, {responseType: 'blob', withCredentials: true}).pipe (
+      catchError((error) => {
+        console.log(error);
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of([]);
+      })
+    );
+  }
+
+  getAllAttachments(parentId) {
+    const body = {
+      parent_id: parentId
+    };
+    // @ts-ignore
+    return this.httpClient.post<any>(this.baseUrl + 'collab/getAttachments/', body, {withCredentials: true}).pipe (
+      catchError((error) => {
+        console.log(error);
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of([]);
+      })
+    );
+  }
+
+  removeAttachment(id){
+    const body = {
+      attachment_ids: [id]
+    };
+    // @ts-ignore
+    return this.httpClient.post<any>(this.baseUrl + 'collab/removeAttachments/', body, {responseType: 'text', withCredentials: true}).pipe (
+      catchError((error) => {
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of([]);
+      })
+    );
+  }
 }

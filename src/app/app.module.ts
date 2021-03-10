@@ -15,12 +15,10 @@ import {HomeModule} from './components/home/home.module';
 import {TeamsModule} from './components/teams/teams.module';
 import {ProfileModule} from './components/profile/profile.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { CalendarModule, DateAdapter } from 'angular-calendar';
-import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {registerLocaleData} from '@angular/common';
 import localePl from '@angular/common/locales/pl';
-import { EventFreqPipe } from './core/pipes/event-freq.pipe';
-import { DayofweekPipe } from './core/pipes/dayofweek.pipe';
+import {TimetableModule} from './components/timetable/timetable.module';
+import {SearchModule} from './components/search/search.module';
 
 registerLocaleData(localePl);
 
@@ -44,8 +42,9 @@ registerLocaleData(localePl);
     HomeModule,
     TeamsModule,
     ProfileModule,
-    BrowserAnimationsModule,
-    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory})
+    TimetableModule,
+    SearchModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,17 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Team} from '../../core/models/team/team.model';
-import {User} from '../../core/models/user.model';
 import {MatDialog} from '@angular/material/dialog';
-import {MembersAutocompleteComponent} from './members-autocomplete/members-autocomplete.component';
 import {AddTeamDialogComponent} from './add-team-dialog/add-team-dialog.component';
-import {MatSnackBar} from '@angular/material/snack-bar';
 import {ToastrService} from 'ngx-toastr';
 import {UserAuthService} from '../../core/services/user-auth.service';
 import {TeamsService} from '../../core/services/teams.service';
 import {Observable, Subscription} from 'rxjs';
-import {finalize, map} from 'rxjs/operators';
-import {consoleTestResultHandler} from 'tslint/lib/test';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'app-teams',
@@ -34,10 +29,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
   constructor(private router: Router, public dialog: MatDialog, private toastr: ToastrService, private authService: UserAuthService,
               private route: ActivatedRoute, private teamsService: TeamsService) {
     this.isTeacher = !this.authService.currentUserValue.isStudent;
-    const members = [
-      new User('kowalska', 'Anna', 'Kowalska', true),
-      new User('nowakp', 'Piotr', 'Nowak', true),
-      new User('kote', 'Estera', 'Kot', true)];
   }
 
   openDialog() {

@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { TeamsRoutingModule } from './teams-routing.module';
 import {TeamsComponent} from './teams.component';
 import {TeamComponent} from './team/team.component';
@@ -28,7 +27,6 @@ import {ToastrModule} from 'ngx-toastr';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { EventFormComponent } from './calendar/event-form/event-form.component';
 import {EventFreqPipe} from '../../core/pipes/event-freq.pipe';
-import {NavbarToggleDirective} from '../../directives/navbar-toggle.directive';
 import {DayofweekPipe} from '../../core/pipes/dayofweek.pipe';
 
 export function flatpickrFactory() {

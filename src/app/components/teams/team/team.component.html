@@ -51,17 +51,18 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <form class="text-left">
+                          <form id="file-form" class="text-left" (ngSubmit)="onSubmitFile(f)" #f="ngForm">
                             <div>
                               <label class="btn btn-light" for="file-input">Wybierz
                                 plik</label><span>{{fileName}}</span>
-                              <input id="file-input" hidden type="file" (change)="onFileSelected($event.target)"/>
+                              <input id="file-input" name="file" ngModel hidden type="file"
+                                     (change)="onFileSelected($event.target)"/>
                             </div>
                           </form>
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Anuluj</button>
-                          <button (click)="onSaveFileClicked()" data-dismiss="modal" type="button"
+                          <button type="submit" form="file-form" data-dismiss="modal" (click)="onSubmitFile(f)"
                                   class="btn btn-primary btn-sm">Zapisz
                           </button>
                         </div>
@@ -75,7 +76,22 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-6">
-                Ten zespół nie ma żadnych materiałów.
+                <div *ngIf="isDataLoaded">
+                  <div *ngIf="files.length === 0">
+                    Ten zespół nie ma żadnych materiałów.
+                  </div>
+                  <div *ngIf="isFileDownloading">
+                    <div class="spinner-border" role="status">
+                      <span class="sr-only">Loading...</span>
+                    </div>
+                  </div>
+                  <div *ngFor="let file of files; let i = index">
+                    <span (click)="getAttachment(file.id , file.name)" class="fake-link">{{file.name}}</span>&nbsp;
+                    <fa-icon (click)="openModal(file)" class="pointer" [icon]="faTrash"></fa-icon>
+                  </div>
+                  <a ></a>
+                </div>
+                <a #fileDownload  [href]="url" download="{{downloadName}}"></a>
               </div>
             </div>
           </div>
@@ -91,3 +107,18 @@
     </div>
   </div>
 </div>
+
+<ng-template #modalDeleteFile let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Czy na pewno chcesz usunąć plik {{modalData.name}}?</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Anuluj</button>
+    <button (click)="onDeleteFileClicked(); close()" type="button"
+            class="btn btn-danger">Usuń
+    </button>
+  </div>
+</ng-template>

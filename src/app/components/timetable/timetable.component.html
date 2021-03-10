@@ -1,0 +1,20 @@
+<div class="row justify-content-center">
+  <div class="col-8">
+    <mwl-calendar-week-view
+      [locale]="'pl'"
+      [viewDate]="viewDate"
+      [events]="events"
+      [dayStartHour]="8"
+      [dayEndHour]="20"
+      [hourSegments]="1"
+      [excludeDays]="[0,6]"
+      [hourSegmentHeight]="25"
+      [dayStartMinute]="0"
+      [dayEndMinute]="0"
+      [refresh]="refresh"
+      (beforeViewRender)="updateCalendarEvents($event)"
+      (eventClicked)="handleEvent('Clicked', $event.event)"
+    >
+    </mwl-calendar-week-view>
+  </div>
+</div>

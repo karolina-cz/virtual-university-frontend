@@ -106,6 +106,8 @@
         [viewDate]="viewDate"
         [events]="events"
         [refresh]="refresh"
+        [hourSegments]="1"
+        [dayStartHour]="7"
         (beforeViewRender)="updateCalendarEvents($event)"
         (eventClicked)="handleEvent('Clicked', $event.event)"
       >
@@ -114,6 +116,8 @@
         [locale]="locale"
         *ngSwitchCase="CalendarView.Day"
         [viewDate]="viewDate"
+        [hourSegments]="1"
+        [dayStartHour]="7"
         [events]="events"
         [refresh]="refresh"
         (beforeViewRender)="updateCalendarEvents($event)"
