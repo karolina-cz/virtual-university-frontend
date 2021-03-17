@@ -24,7 +24,7 @@ export class UserAuthService {
     return this.currentUser;
   }
 
-  isAuthenticated(): boolean{
+  isAuthenticated(): boolean {
     return this.currentUser != null;
   }
 
@@ -43,7 +43,7 @@ export class UserAuthService {
       password
     };
     // @ts-ignore
-    return this.http.post<any>(this.url + 'auth/login/', body, { withCredentials: true}).pipe(
+    return this.http.post<any>(this.url + 'auth/login/', body, {withCredentials: true}).pipe(
       map((data) => {
         const isStudent = data.Type_of_Member__c === 'Student';
         this.currentUser = new User(username, data.First_Name__c, data.Last_Name__c, isStudent);
