@@ -4,12 +4,15 @@ import {MainLayoutComponent} from '../../common/layout/main-layout/main-layout.c
 import {ProfileComponent} from '../profile/profile.component';
 import {AuthGuard} from '../../core/services/auth.guard';
 import {TimetableComponent} from './timetable.component';
+import {CourseComponent} from './course/course.component';
 
 const routes: Routes = [
   {path: 'timetable',
     component: MainLayoutComponent,
     children: [
       {path: '', component: TimetableComponent, canActivate: [AuthGuard]},
+      {path: 'course/:courseId/:groupId/grades', component: CourseComponent, canActivate: [AuthGuard]},
+      {path: 'course/:courseId/:groupId/info', component: CourseComponent, canActivate: [AuthGuard]}
     ]}
 ];
 

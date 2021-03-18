@@ -10,6 +10,7 @@ import {Subject} from 'rxjs';
 import {ViewPeriod} from 'calendar-utils';
 import {TimetableService} from '../../core/services/timetable/timetable.service';
 import RRule from 'rrule';
+import {Router} from '@angular/router';
 
 interface MyCalendarEvent extends CalendarEvent {
   description: string;
@@ -52,11 +53,12 @@ export class TimetableComponent implements OnInit {
   refresh: Subject<any> = new Subject();
   viewPeriod: ViewPeriod;
 
-  constructor(private timetableService: TimetableService, private change: ChangeDetectorRef) { }
+  constructor(private timetableService: TimetableService, private change: ChangeDetectorRef, private router: Router) { }
 
   ngOnInit(): void {
     this.timetableService.getTimetable().subscribe(data => {
       if (data !== 'error'){
+        console.log(data);
         this.createEvents(data);
       }
     });
@@ -116,6 +118,7 @@ export class TimetableComponent implements OnInit {
 
   handleEvent(action: string, event: MyCalendarEvent): void {
     console.log('clicked');
+    this.router.navigate(['timetable/course/a0909000000O7KPAA0/a0609000001p51oAAA/grades']);
   }
 
   updateCalendarEvents(

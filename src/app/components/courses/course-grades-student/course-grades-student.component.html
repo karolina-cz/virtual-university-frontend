@@ -1,0 +1,25 @@
+<h4 class="text-center mb-4">Oceny</h4>
+<div class="row justify-content-center">
+  <div class="w-75" >
+<table class="table my-0" id="dataTable">
+  <thead>
+  <tr>
+    <th>Nazwa</th>
+    <th>Wartość</th>
+  </tr>
+  </thead>
+  <tbody>
+  <tr style="cursor:pointer" *ngFor="let item of grades; let i = index" >
+    <td>{{item.name}}</td>
+    <td style="text-overflow: ellipsis;">
+      <p
+        style="text-overflow: ellipsis;">
+        {{item.value}}</p>
+    </td>
+  </tr>
+  </tbody>
+</table>
+  </div>
+</div>
+
+

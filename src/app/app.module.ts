@@ -19,7 +19,10 @@ import {registerLocaleData} from '@angular/common';
 import localePl from '@angular/common/locales/pl';
 import {TimetableModule} from './components/timetable/timetable.module';
 import {SearchModule} from './components/search/search.module';
-
+import { CourseInfoComponent } from './components/courses/course-info/course-info.component';
+import { CourseGradesStudentComponent } from './components/courses/course-grades-student/course-grades-student.component';
+import { CourseGradesTeacherComponent } from './components/courses/course-grades-teacher/course-grades-teacher.component';
+import {CoursesModule} from './components/courses/courses.module';
 registerLocaleData(localePl);
 
 
@@ -40,6 +43,7 @@ registerLocaleData(localePl);
     PasswordChangeModule,
     LoginModule,
     HomeModule,
+    CoursesModule,
     TeamsModule,
     ProfileModule,
     TimetableModule,
@@ -47,6 +51,8 @@ registerLocaleData(localePl);
     BrowserAnimationsModule
   ],
   providers: [],
+  exports: [
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

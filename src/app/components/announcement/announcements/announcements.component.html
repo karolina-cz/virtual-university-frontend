@@ -1,0 +1,27 @@
+<div class="card shadow-lg o-hidden border-0 my-5">
+  <div class="card-header py-3">
+    <p class="text-primary m-0 font-weight-bold">
+      <fa-icon [icon]="faEnvelope"></fa-icon>
+      Ogłoszenia</p>
+  </div>
+  <div *ngIf="announcements.length > 0" class="card-body p-0">
+    <div class="p-3" >
+      <div class="row">
+        <div class="col-5">
+          <ul class="list-group">
+            <li class="list-group-item pointer" *ngFor="let item of announcements; let i = index" (click)="changeAnnouncement(item)">
+              {{item.subject}}
+            </li>
+          </ul>
+        </div>
+        <div class="col-7">
+          <div class="text-center">
+            <p class="font-weight-bold">{{announcement.subject}}</p>
+            <p>{{announcement.message}}</p>
+          </div>
+          <small class="text-left">Data ogłoszenia: {{announcement.announcedOn | date:'d.MM.y, H:mm'}}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

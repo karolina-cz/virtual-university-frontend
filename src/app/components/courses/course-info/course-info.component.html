@@ -1,0 +1,48 @@
+<div class="card shadow-lg o-hidden border-0 my-5">
+  <div class="card-header py-3">
+    <p class="text-primary m-0 font-weight-bold">Info</p>
+  </div>
+  <div class="card-body p-0">
+      <div class="p-3" >
+        <p class="font-weight-bold">{{course.subject}}</p>
+        <p><span class="font-weight-bold">ECTS</span>: {{course.ects}} </p>
+        <p><span class="font-weight-bold">Wydział</span>: {{course.faculty}}</p>
+      </div>
+    </div>
+</div>
+<div class="card shadow-lg o-hidden border-0 my-5">
+  <div class="card-header py-3">
+    <p class="text-primary m-0 font-weight-bold">Metody oceny</p>
+  </div>
+  <div class="card-body p-0">
+    <div class="row justify-content-center">
+      <div class="p-5">
+        {{course.assessmentMethods}}
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card shadow-lg o-hidden border-0 my-5">
+  <div class="card-header py-3">
+    <p class="text-primary m-0 font-weight-bold">Statut</p>
+  </div>
+  <div class="card-body p-0">
+    <div class="row justify-content-center">
+      <div class="p-5" [innerHTML]="course.statute">
+      </div>
+    </div>
+  </div>
+</div>
+<div class="card shadow-lg o-hidden border-0 my-5">
+  <div class="card-header py-3">
+    <p class="text-primary m-0 font-weight-bold">Literatura</p>
+  </div>
+  <div class="card-body p-0">
+    <div class="row justify-content-center">
+      <div class="p-5" >
+        {{course.literature}}
+      </div>
+    </div>
+  </div>
+</div>
+

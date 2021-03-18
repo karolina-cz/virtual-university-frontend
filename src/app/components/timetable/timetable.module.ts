@@ -5,7 +5,8 @@ import { TimetableRoutingModule } from './timetable-routing.module';
 import {TimetableComponent} from './timetable.component';
 import {CalendarDateFormatter, CalendarModule, CalendarNativeDateFormatter, DateAdapter, DateFormatterParams} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
-import {CalendarModuleConfig} from 'angular-calendar/modules/common/calendar-common.module';
+import {CoursesModule} from '../courses/courses.module';
+import { CourseComponent } from './course/course.component';
 
 class CustomDateFormatter extends CalendarNativeDateFormatter {
   public dayViewHour({ date, locale }: DateFormatterParams): string {
@@ -21,17 +22,19 @@ class CustomDateFormatter extends CalendarNativeDateFormatter {
 
 @NgModule({
   declarations: [
-    TimetableComponent
+    TimetableComponent,
+    CourseComponent
   ],
   imports: [
     CommonModule,
     TimetableRoutingModule,
-    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }, {
+    CalendarModule.forRoot({provide: DateAdapter, useFactory: adapterFactory}, {
       dateFormatter: {
         provide: CalendarDateFormatter,
         useClass: CustomDateFormatter
       }
-    })
+    }),
+    CoursesModule
   ]
 })
 export class TimetableModule { }
