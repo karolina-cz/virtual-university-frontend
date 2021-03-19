@@ -1,0 +1,42 @@
+<h3 class="text-center mb-4">Wyszukaj przedmiot</h3>
+<div class="row justify-content-center">
+  <div class="w-50" >
+    <form id="search-form" class="text-center" #f="ngForm" (ngSubmit)="onSearchCourse(f)">
+      <div class="input-group" >
+        <input type="text"
+               name="course"
+               ngModel
+               class="form-control border-0 small input-large search-query"
+               placeholder="Wpisz nazwę przedmiotu..."/>
+        <div class="input-group-append">
+          <button class="btn btn-primary py-0" type="submit">
+            <i class="fas fa-search"></i>
+          </button>
+        </div>
+      </div>
+    </form>
+    <div *ngIf="isDataLoaded && courses.length !==0">
+      <table class="table my-5" id="dataTable">
+        <thead>
+        <tr>
+          <th>Nazwa przedmiotu</th>
+          <th>Wydział</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr (click)="onCourseClicked(item)" style="cursor:pointer" *ngFor="let item of courses; let i = index" >
+          <td>{{item.subject}}</td>
+          <td style="text-overflow: ellipsis;">
+            <p
+              style="text-overflow: ellipsis;">
+              {{item.faculty}}</p>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="text-center my-5" *ngIf="isDataLoaded && courses.length === 0">
+      Nie znaleziono żadnych wyników
+    </div>
+  </div>
+</div>

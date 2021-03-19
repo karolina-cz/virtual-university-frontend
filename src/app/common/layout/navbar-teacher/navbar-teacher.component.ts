@@ -1,5 +1,5 @@
 import {Component, Input, OnInit, Output, EventEmitter} from '@angular/core';
-import {faClock, faHome} from '@fortawesome/free-solid-svg-icons';
+import {faClock, faHome, faSearch} from '@fortawesome/free-solid-svg-icons';
 import {faUsers} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
@@ -13,6 +13,7 @@ export class NavbarTeacherComponent implements OnInit {
   faHome = faHome;
   faUsers = faUsers;
   faClock = faClock;
+  faSearch = faSearch;
   constructor() { }
 
   ngOnInit(): void {

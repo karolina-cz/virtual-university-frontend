@@ -11,6 +11,9 @@
     <div class="m-3" *ngIf="authService.currentUserValue.isStudent === true">
       <app-course-grades-student></app-course-grades-student>
     </div>
+    <div class="m-3" *ngIf="authService.currentUserValue.isStudent === false">
+      <app-course-grades-teacher></app-course-grades-teacher>
+    </div>
   </div>
   <div  *ngIf="router.url.endsWith('info')">
       <app-course-info></app-course-info>

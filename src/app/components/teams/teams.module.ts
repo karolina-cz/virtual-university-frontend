@@ -64,7 +64,7 @@ export function flatpickrFactory() {
     FlatpickrModule.forRoot(),
     CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
-  exports: [TeamsComponent],
+    exports: [TeamsComponent, DayofweekPipe],
   bootstrap: [MembersAutocompleteComponent],
   providers: [
   MatDialog

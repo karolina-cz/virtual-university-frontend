@@ -18,6 +18,7 @@ interface MyCalendarEvent extends CalendarEvent {
   recurringEventStart;
   recurringEventEnd;
   frequency;
+  groupId;
 }
 const weekdays = [RRule.SU, RRule.MO, RRule.TU, RRule.WE, RRule.TH, RRule.FR, RRule.SA];
 const colors: any = {
@@ -81,7 +82,8 @@ export class TimetableComponent implements OnInit {
         actions: null,
         recurringEventStart: startDate,
         recurringEventEnd: endDate,
-        frequency: 'Weekly'
+        frequency: 'Weekly',
+        groupId: teamEvent.Didactic_Group__c
       };
       this.addRecurringEvent(event, events);
     }
@@ -118,7 +120,8 @@ export class TimetableComponent implements OnInit {
 
   handleEvent(action: string, event: MyCalendarEvent): void {
     console.log('clicked');
-    this.router.navigate(['timetable/course/a0909000000O7KPAA0/a0609000001p51oAAA/grades']);
+    console.log(event.groupId);
+    this.router.navigate(['timetable/course/' + event.groupId + '/grades']);
   }
 
   updateCalendarEvents(

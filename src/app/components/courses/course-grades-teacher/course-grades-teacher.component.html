@@ -1,1 +1,67 @@
-<p>course-grades-teacher works!</p>
+<div class="row">
+<div class="col-10 ">
+  <h4 class="mb-4">Oceny</h4>
+</div>
+<div class="col-2 text-md-right">
+  <button *ngIf="!isEditingModeOn" class="btn btn-primary btn-sm" (click)="onEditClicked()"><fa-icon [icon]="faPencil"></fa-icon>&nbsp;Edytuj</button>
+</div>
+</div>
+<div class="row justify-content-center">
+  <div class="w-100" >
+    <table class="table my-0" id="dataTable">
+      <thead>
+      <tr>
+        <th>Imię i Nazwisko</th>
+
+        <th *ngFor="let item of gradeSubjects; let i = index">{{item}}</th>
+        <th *ngIf="isEditingModeOn"> <fa-icon class="text-primary pointer" (click)="modal.open(modalAddColumn)"  [icon]="faCirclePlus"></fa-icon></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr style="cursor:pointer" *ngFor="let item of studentsGrades; let i = index" >
+        <td>{{item.user.firstname}}&nbsp;{{item.user.lastname}}</td>
+        <td style="text-overflow: ellipsis;" *ngFor="let subject of gradeSubjects; let j = index">
+          <span *ngIf="!isEditingModeOn">{{getGradeBySubject(item, subject).value || '-'}}</span>
+          <select #grade name="grade" (change)="onGradeChanged(item, subject, grade.value)" value="{{getGradeBySubject(item, subject).value || '-'}}" *ngIf="isEditingModeOn" class="custom-select">
+            <option value="-">-</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="3.5">3.5</option>
+            <option value="4">4</option>
+            <option value="4.5">4.5</option>
+            <option value="5">5</option>
+          </select>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<div *ngIf="isEditingModeOn" class="row mt-3">
+  <div class="col-8">
+  </div>
+  <div class="col-4 text-md-right">
+    <button class="btn btn-primary btn-sm" (click)="onSaveClicked()">Ok</button>
+  </div>
+</div>
+
+<ng-template #modalAddColumn let-close="close">
+  <div class="modal-header">
+    <h5 class="modal-title">Dodaj kolumnę</h5>
+    <button type="button" class="close" (click)="close()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form class="user" id="form" #f="ngForm" (ngSubmit)="addColumn(f); close()">
+      <div class="input-group">
+      <input name="column" ngModel class="form-control form-control-user" type="text" placeholder="Nazwa kolumny">
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button  type="submit" form="form"
+            class="btn btn-primary">Ok
+    </button>
+  </div>
+</ng-template>

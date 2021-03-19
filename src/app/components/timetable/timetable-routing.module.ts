@@ -11,8 +11,8 @@ const routes: Routes = [
     component: MainLayoutComponent,
     children: [
       {path: '', component: TimetableComponent, canActivate: [AuthGuard]},
-      {path: 'course/:courseId/:groupId/grades', component: CourseComponent, canActivate: [AuthGuard]},
-      {path: 'course/:courseId/:groupId/info', component: CourseComponent, canActivate: [AuthGuard]}
+      {path: 'course/:groupId/grades', component: CourseComponent, canActivate: [AuthGuard]},
+      {path: 'course/:groupId/info', component: CourseComponent, canActivate: [AuthGuard]}
     ]}
 ];
 

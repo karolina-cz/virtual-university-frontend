@@ -9,14 +9,14 @@ import {ActivatedRoute} from '@angular/router';
   styleUrls: ['./course-info.component.css']
 })
 export class CourseInfoComponent implements OnInit {
-  courseId;
+  groupId;
   course: Course = new Course(null, null, null, null, null, null, null);
 
   constructor(private courseService: CourseService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
-    this.courseId = this.route.snapshot.params.courseId;
-    this.courseService.getCourseInfo(this.courseId).subscribe(
+    this.groupId = this.route.snapshot.params.groupId;
+    this.courseService.getCourseInfo(this.groupId).subscribe(
       data => {
         if (data !== 'error'){
           // @ts-ignore

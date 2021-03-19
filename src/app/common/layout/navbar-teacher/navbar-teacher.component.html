@@ -16,6 +16,12 @@
         <li routerLinkActive="active" class="nav-item"><a class="nav-link" routerLink="/timetable">
           <fa-icon [icon]="faClock"></fa-icon>
           <span class="mx-1">Plan zajęć</span></a></li>
+        <li routerLinkActive="active" class="nav-item"><a class="nav-link" routerLink="/search/teacher">
+          <fa-icon [icon]="faSearch"></fa-icon>
+          <span class="mx-1">Znajdź wykładowcę</span></a></li>
+        <li routerLinkActive="active" class="nav-item"><a class="nav-link" routerLink="/search/course">
+          <fa-icon [icon]="faSearch"></fa-icon>
+          <span class="mx-1">Znajdź przedmiot</span></a></li>
       </ul>
       <div class="text-center d-none d-md-inline">
         <button class="btn rounded-circle border-0" id="sidebarToggle" (click)="onToggleClicked()" type="button"></button>
