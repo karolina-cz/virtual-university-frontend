@@ -1,4 +1,4 @@
-import {Component, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import {CourseService} from '../../../core/services/course/course.service';
 import {ActivatedRoute} from '@angular/router';
 import {faPencilAlt, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
@@ -25,7 +25,6 @@ export class CourseGradesTeacherComponent implements OnInit {
   ngOnInit(): void {
     this.groupId = this.route.snapshot.params.groupId;
     this.courseService.getCourseGrades(this.groupId).subscribe(data => {
-      console.log(data);
       // @ts-ignore
       this.studentsGrades = data.userGrades;
       // @ts-ignore
@@ -61,18 +60,13 @@ export class CourseGradesTeacherComponent implements OnInit {
     if (grade !== '-'){
       grade.value = newGrade;
       if (newGrade === '-'){
-        console.log('delete' );
         this.courseService.removeGrade(grade.id).subscribe();
       } else {
         this.courseService.updateGrade(newGrade, gradeSubject, grade.id).subscribe(data => {
-          console.log('ok' + data);
         });
-        console.log('update with value' + newGrade);
       }
     } else {
       if (newGrade !== '-'){
-        // create
-        console.log('create');
         const createdGrade = new Grade('0', gradeSubject, newGrade);
         studentGradeInfo.grades.push(createdGrade);
         this.courseService.addGrade(newGrade, gradeSubject, studentGradeInfo.didacticGroupAttendee).subscribe(

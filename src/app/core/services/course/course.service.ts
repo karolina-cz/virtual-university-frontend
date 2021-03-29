@@ -1,11 +1,11 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UserAuthService} from '../user-auth.service';
 import {Router} from '@angular/router';
 import {environment} from '../../../../environments/environment';
 import {catchError, map} from 'rxjs/operators';
 import {ErrorUtils} from '../error-utils';
-import {from, of} from 'rxjs';
+import {of} from 'rxjs';
 import {User} from '../../models/user.model';
 import {Grade} from '../../models/course/grade.model';
 import {Course} from '../../models/course/course.model';
@@ -26,11 +26,15 @@ export class CourseService {
     // @ts-ignore
     return this.httpClient.post<any>(this.baseUrl + 'utils/getMyCourseInfo/', body, {withCredentials: true}).pipe(
       map(data => {
-        console.log(data);
         const userGrades = [];
         const gradeSubjects = [];
+        const subject = data.subject;
+        const typeOfClasses = data.type_of_classes;
         // tslint:disable-next-line:forin
         for (const userData in data) {
+          if (userData === 'subject' || userData === 'type_of_classes'){
+            continue;
+          }
           const user = new User(data[userData].login, data[userData].first_name, data[userData].last_name, true);
           const grades = [];
           for (const grade of data[userData].grades){
@@ -47,11 +51,12 @@ export class CourseService {
         }
         return {
           userGrades,
-          gradeSubjects
+          gradeSubjects,
+          subject,
+          typeOfClasses
         };
       }),
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of({});
       })
@@ -69,7 +74,6 @@ export class CourseService {
         return course;
       }),
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of('error');
       })
@@ -86,7 +90,6 @@ export class CourseService {
     };
     return this.httpClient.post<any>(this.baseUrl + 'utils/addGrade/', body, {withCredentials: true}).pipe(
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of('error');
       })
@@ -104,7 +107,6 @@ export class CourseService {
     // @ts-ignore
     return this.httpClient.post<any>(this.baseUrl + 'utils/editGrade/', body, {withCredentials: true, responseType: 'text'}).pipe(
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of('error');
       })
@@ -118,7 +120,6 @@ export class CourseService {
     // @ts-ignore
     return this.httpClient.post<any>(this.baseUrl + 'utils/removeGrade/', body, {withCredentials: true, responseType: 'text'}).pipe(
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of('error');
       })
@@ -132,7 +133,6 @@ export class CourseService {
     };
     return this.httpClient.post<any>(this.baseUrl + 'utils/createChangeGroupRequest/', body, {withCredentials: true}).pipe(
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of('error');
       })
@@ -147,7 +147,6 @@ export class CourseService {
     // tslint:disable-next-line:max-line-length
     return this.httpClient.post<any>(this.baseUrl + 'utils/removeChangeGroupRequest/', body, {withCredentials: true, responseType: 'text'}).pipe(
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of('error');
       })
@@ -160,7 +159,29 @@ export class CourseService {
     };
     return this.httpClient.post<any>(this.baseUrl + 'utils/getChangeGroupRequestInfo/', body, {withCredentials: true}).pipe(
       catchError((error) => {
-        console.log(error);
+        ErrorUtils.isSessionExpired(error, this.authService, this.router);
+        return of('error');
+      })
+    );
+  }
+
+  getMyGroupChangeRequests(didacticGroupId) {
+    const body = {
+      didactic_group_id: didacticGroupId
+    };
+    return this.httpClient.post<any>(this.baseUrl + 'utils/getChangeGroupRequests/', body, {withCredentials: true}).pipe(
+      map(data => {
+        if (data.records.length === 0){
+          return null;
+        }
+        return {
+          id: data.records[0].Id,
+          teacher: data.records[0].To_Group__c.Teacher_Name__c,
+          startDate: new Date(data.records[0].To_Group__c.Classes_Start_Date__c),
+          endDate: new Date(data.records[0].To_Group__c.Classes_End_Date__c)
+        };
+      }),
+      catchError((error) => {
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of('error');
       })

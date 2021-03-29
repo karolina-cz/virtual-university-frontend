@@ -76,7 +76,6 @@ export class TeamComponent implements OnInit {
         result = reader.result.split(',')[1];
       }
       this.teamsService.addAttachment(this.fileName, result, this.teamId).subscribe(data => {
-        console.log(data);
         if (data !== 'error'){
           this.files.push({
             name: this.fileName,
@@ -88,7 +87,6 @@ export class TeamComponent implements OnInit {
   }
 
   getAttachment(id, name){
-    console.log(id);
     this.isFileDownloading = true;
     this.teamsService.getAttachment(id).subscribe(data => {
       // @ts-ignore

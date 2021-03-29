@@ -22,7 +22,6 @@ export class SearchTeacherService {
     };
     return this.httpClient.post<any>(this.baseUrl + 'utils/searchTeacher/', body, {withCredentials: true}).pipe(
       map(data => {
-        console.log(data);
         const users = [];
         for (const user of data.users) {
           users.push(new User(user.username, user.firstname, user.lastname, false));

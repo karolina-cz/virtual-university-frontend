@@ -247,7 +247,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
           }
         })
       ).subscribe(d => {
-        console.log(this.membersEvents);
         resolve();
       });
     });
@@ -460,7 +459,6 @@ export class CalendarComponent implements OnInit, OnDestroy {
           this.getAllEvents(viewRender.period.start, viewRender.period.end),
           this.getMembersEvents(viewRender.period.start, viewRender.period.end)
         ]).then(() => {
-          console.log('aa');
           this.onChangeMembersList(this.form.value.members);
         });
         this.viewPeriod = viewRender.period;

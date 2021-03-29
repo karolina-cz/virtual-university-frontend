@@ -4,6 +4,7 @@ import {Grade} from '../../../core/models/course/grade.model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {faCheck, faPencilAlt} from '@fortawesome/free-solid-svg-icons';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-course-grades-student',
@@ -23,20 +24,23 @@ export class CourseGradesStudentComponent implements OnInit {
   ngOnInit(): void {
     this.groupId = this.route.snapshot.params.groupId;
     this.courseService.getCourseGrades(this.groupId).subscribe(data => {
-      console.log(data);
       // @ts-ignore
       this.grades = data.userGrades[0].grades;
-      console.log(this.grades);
     });
     this.courseService.getChangeGroupRequestInfo(this.groupId).subscribe(data => {
       for (const groupData of data.records) {
         const group = {
           id: groupData.Id,
           teacher: groupData.Teacher_Name__c,
-          date: new Date(groupData.Classes_Start_Date__c)
+          startDate: new Date(groupData.Classes_Start_Date__c),
+          endDate: new Date(groupData.Classes_End_Date__c)
         };
         this.availableGroups.push(group);
       }
+    });
+    this.courseService.getMyGroupChangeRequests(this.groupId).subscribe(data =>
+    {
+      this.myChangeGroupRequest = data;
     });
   }
 
@@ -44,12 +48,12 @@ export class CourseGradesStudentComponent implements OnInit {
     this.myChangeGroupRequest = {
       id: '0',
       teacher: newGroup.teacher,
-      date: newGroup.date
+      startDate: newGroup.startDate,
+      endDate: newGroup.endDate
     };
     this.courseService.createChangeGroupRequest(this.groupId, newGroup.id).subscribe(
       data => {
         this.myChangeGroupRequest.id = data.id;
-        console.log('ok');
       }
     );
   }

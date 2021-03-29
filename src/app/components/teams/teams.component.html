@@ -23,7 +23,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr style="cursor:pointer" *ngFor="let item of teams | async; let i = index" (click)="onTeamSelected(item.id)">
+          <tr style="cursor:pointer" *ngFor="let item of teams; let i = index" (click)="onTeamSelected(item.id)">
             <td>{{item.title}}</td>
             <td style="text-overflow: ellipsis;">
               <p

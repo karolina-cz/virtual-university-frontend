@@ -165,7 +165,6 @@ export class TeamsService {
     // @ts-ignore
     return this.httpClient.post<any>(this.baseUrl + 'collab/getAttachment/', body, {responseType: 'blob', withCredentials: true}).pipe (
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of([]);
       })
@@ -179,7 +178,6 @@ export class TeamsService {
     // @ts-ignore
     return this.httpClient.post<any>(this.baseUrl + 'collab/getAttachments/', body, {withCredentials: true}).pipe (
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of([]);
       })

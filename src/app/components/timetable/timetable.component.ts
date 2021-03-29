@@ -59,7 +59,6 @@ export class TimetableComponent implements OnInit {
   ngOnInit(): void {
     this.timetableService.getTimetable().subscribe(data => {
       if (data !== 'error'){
-        console.log(data);
         this.createEvents(data);
       }
     });
@@ -119,8 +118,6 @@ export class TimetableComponent implements OnInit {
   }
 
   handleEvent(action: string, event: MyCalendarEvent): void {
-    console.log('clicked');
-    console.log(event.groupId);
     this.router.navigate(['timetable/course/' + event.groupId + '/grades']);
   }
 

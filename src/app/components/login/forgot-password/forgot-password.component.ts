@@ -15,7 +15,6 @@ export class ForgotPasswordComponent implements OnInit {
   ngOnInit(): void {
   }
   onSave(form: NgForm) {
-    console.log(form.value);
     const username = form.value.username;
     if (!username.replace(/\s/g, '').length){
       this.isUsernameValid = false;

@@ -49,8 +49,8 @@
       <div class="list-group-item">
         <div class="row">
           <div class="col-9 d-flex align-items-center">
-            <p> Wniosek o zmianę terminu na: {{myChangeGroupRequest.date | dayofweek}}
-              &nbsp;{{myChangeGroupRequest.date | date:'H:mm'}}, prowadzący: {{myChangeGroupRequest.teacher}}</p>
+            <p> Wniosek o zmianę terminu na: {{myChangeGroupRequest.startDate | dayofweek}}
+              &nbsp;{{myChangeGroupRequest.startDate | date:'H:mm'}} - {{myChangeGroupRequest.endDate | date:'H:mm'}}, prowadzący: {{myChangeGroupRequest.teacher}}</p>
           </div>
           <div class="col-3 text-md-right">
             <button class="btn btn-sm btn-secondary" (click)="onRemoveGroupChangeRequest()">&times;&nbsp;Anuluj wniosek</button>
@@ -64,7 +64,7 @@
       <div class="list-group-item">
         <div *ngFor="let item of availableGroups; let i = index" class="row">
           <div class="col-8 d-flex align-items-center">
-            {{item.date | dayofweek}}&nbsp;{{item.date | date:'H:mm'}}, prowadzący: {{item.teacher}}
+            {{item.startDate | dayofweek}}&nbsp;{{item.startDate | date:'H:mm'}} - {{item.endDate | date:'H:mm'}}, prowadzący: {{item.teacher}}
           </div>
           <div class="col-4 text-md-right">
             <button class="btn btn-sm btn-primary" (click)="onChangeGroupClicked(item)">

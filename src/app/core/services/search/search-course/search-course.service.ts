@@ -27,7 +27,6 @@ export class SearchCourseService {
         for (const course of data.records) {
           courses.push(new Course(course.Subject__c, null, course.Didactic_Group__c[0], null, course.Faculty__c, null, null));
         }
-        console.log(courses);
         return courses;
       }),
       catchError((error) => {

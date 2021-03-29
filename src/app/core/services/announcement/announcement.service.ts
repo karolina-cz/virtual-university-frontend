@@ -28,7 +28,6 @@ export class AnnouncementService {
         return announcements;
       }),
       catchError((error) => {
-        console.log(error);
         ErrorUtils.isSessionExpired(error, this.authService, this.router);
         return of([]);
       })

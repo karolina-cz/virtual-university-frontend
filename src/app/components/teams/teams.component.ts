@@ -7,6 +7,7 @@ import {UserAuthService} from '../../core/services/user-auth.service';
 import {TeamsService} from '../../core/services/teams.service';
 import {Observable, Subscription} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {Team} from '../../core/models/team/team.model';
 
 @Component({
   selector: 'app-teams',
@@ -14,7 +15,7 @@ import {map} from 'rxjs/operators';
   styleUrls: ['./teams.component.css']
 })
 export class TeamsComponent implements OnInit, OnDestroy {
-  teams: Observable<any>;
+  teams: Team[];
   teamsCount: number;
   teamsPerPage = 5;
   totalPagesCount;
@@ -24,7 +25,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
   paginationButtonsValues: number[] = [1, 2, 3];
   isTeacher = false;
   page: number;
-  teamsSubscription: Subscription;
 
   constructor(private router: Router, public dialog: MatDialog, private toastr: ToastrService, private authService: UserAuthService,
               private route: ActivatedRoute, private teamsService: TeamsService) {
@@ -37,8 +37,13 @@ export class TeamsComponent implements OnInit, OnDestroy {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {
+      if (result !== false) {
         this.toastr.success('Zespół został stworzony', '', {timeOut: 2000});
+        if (this.teamsCount < 5){
+          this.teams.push(result);
+        }
+        this.teamsCount++;
+        this.updateValuesAfterDataReceived();
       } else if (result === false) {
         this.toastr.error('Błąd podczas tworzenia zespołu', '', {timeOut: 2000});
       }
@@ -47,7 +52,6 @@ export class TeamsComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.dialog.closeAll();
-    this.teamsSubscription.unsubscribe();
   }
 
   ngOnInit(): void {
@@ -57,18 +61,16 @@ export class TeamsComponent implements OnInit, OnDestroy {
         this.page = 1;
       }
 
-      this.teams = this.teamsService.getTeams(this.page).pipe(
+      this.teamsService.getTeams(this.page).pipe(
         map((data) => {
           // @ts-ignore
           this.teamsCount = data.totalCount;
           // @ts-ignore
-          return data.teams;
+          this.updateValuesAfterDataReceived();
+          // @ts-ignore
+          this.teams = data.teams;
         })
-      );
-
-      this.teamsSubscription = this.teams.subscribe(() => {
-        this.updateValuesAfterDataReceived();
-      });
+      ).subscribe();
     });
   }
 

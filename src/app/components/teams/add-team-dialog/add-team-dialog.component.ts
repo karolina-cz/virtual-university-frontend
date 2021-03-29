@@ -1,8 +1,9 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
 import {MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MembersAutocompleteComponent} from '../members-autocomplete/members-autocomplete.component';
 import {TeamsService} from '../../../core/services/teams.service';
+import {Team} from '../../../core/models/team/team.model';
 
 @Component({
   selector: 'app-add-team-dialog',
@@ -42,7 +43,8 @@ export class AddTeamDialogComponent implements OnInit {
           if (data === 'error'){
             this.dialogRef.close(false);
           } else{
-            this.dialogRef.close(true);
+            this.dialogRef.close(new Team(this.title.value, this.description.value, data.team_id, this.memberAutocomplete.members,
+              null, null));
           }
         }
       );
